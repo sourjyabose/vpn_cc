@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudVPN+ | Documentation: recharge.js</title>
+  <style>
+    :root {
+      --doc-bg: #faf8f5;
+      --doc-surface: #ffffff;
+      --doc-border: #e7e5e4;
+      --doc-text: #1c1917;
+      --doc-text-muted: #57534e;
+      --doc-brand: #b45309;
+      --doc-brand-dark: #78350f;
+      --doc-brand-light: #fef3c7;
+      --doc-code-bg: #292524;
+      --doc-code-text: #f5f5f4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--doc-bg);
+      color: var(--doc-text);
+      line-height: 1.65;
+      padding: 2.5rem 1.5rem;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background-color: var(--doc-surface);
+      border: 1px solid var(--doc-border);
+      border-radius: 16px;
+      padding: 3rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    header {
+      border-bottom: 2px solid var(--doc-border);
+      padding-bottom: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .badge {
+      display: inline-block;
+      background-color: var(--doc-brand-light);
+      color: var(--doc-brand-dark);
+      border: 1px solid var(--doc-brand);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    h1 { font-size: 2.2rem; color: var(--doc-text); margin-bottom: 0.5rem; }
+    h2 { font-size: 1.5rem; color: var(--doc-brand-dark); margin: 2.5rem 0 1rem 0; border-bottom: 1px solid var(--doc-border); padding-bottom: 0.4rem; }
+    h3 { font-size: 1.2rem; color: var(--doc-text); margin: 1.5rem 0 0.75rem 0; }
+    p, li { font-size: 1rem; color: var(--doc-text-muted); margin-bottom: 1rem; }
+    ul, ol { padding-left: 1.75rem; margin-bottom: 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+    strong { color: var(--doc-text); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border: 1px solid var(--doc-border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+    th {
+      background-color: var(--doc-brand-light);
+      color: var(--doc-brand-dark);
+      font-weight: 700;
+    }
+    tr:nth-child(even) { background-color: #fdfbf7; }
+    pre {
+      background-color: var(--doc-code-bg);
+      color: var(--doc-code-text);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.9rem;
+      margin: 1.25rem 0;
+    }
+    code {
+      font-family: Consolas, Monaco, monospace;
+      background-color: #f5f2eb;
+      color: var(--doc-brand-dark);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: var(--doc-brand);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .back-btn:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="project_documentation.html" class="back-btn">← Back to Master Documentation</a>
+    
+    <header>
+      <span class="badge">Controller Specification</span>
+      <h1>File Documentation: recharge_js.html</h1>
+      <p>Target File: <code>js/recharge.js</code> | Type: ECMAScript 6 Bandwidth & Recharge Controller</p>
+    </header>
+
+    <!-- PART 1 -->
+    <section>
+      <h2>First: Purpose, Necessity & Project Fit</h2>
+      <p><strong>Why this file is necessary:</strong> <code>recharge.js</code> manages the interactive plan selection, pricing display, transaction dispatching, and confirmation receipt rendering for the CloudVPN+ high-speed data recharge system.</p>
+      
+      <p><strong>How it fits into the project:</strong> It powers the business logic for <code>recharge.html</code>, binding the required data plan tiers (<code>1gb</code>, <code>1.5gb</code>, <code>2gb</code>, <code>5gb</code>, <code>10gb</code>) to live UI summary cards and backend transaction endpoints.</p>
+
+      <p><strong>How it interacts with the project:</strong></p>
+      <ul>
+        <li>Reads user session metadata from <code>CloudVPNAPI.getCurrentUser()</code> (in <code>api_client.js</code>) to display member status.</li>
+        <li>Listens to changes on the <code>#planSelect</code> dropdown in <code>recharge.html</code>.</li>
+        <li>Dispatches recharge orders via <code>CloudVPNAPI.processRecharge()</code>.</li>
+        <li>Controls visibility of the receipt modal dialog (<code>#rechargeModal</code>).</li>
+      </ul>
+    </section>
+
+    <!-- PART 2 -->
+    <section>
+      <h2>Second: Project Structure, Architecture & Design Rationale</h2>
+      <p><strong>Architecture & Design Rationale:</strong> Encapsulates data tiers into an immutable data map (<code>PLAN_DATA</code>). When users select different options in the dropdown, the view is updated reactively without any page reloads or external library overhead.</p>
+
+      <p><strong>Imported Dependencies:</strong></p>
+      <ul>
+        <li><code>imported CloudVPNAPI from api_client.js</code> (reason: needed to query the active authenticated session, dispatch recharge transactions, and clear session on sign out).</li>
+      </ul>
+    </section>
+
+    <!-- PART 3 -->
+    <section>
+      <h2>Third: Exhaustive Function, Object & Variable Documentation</h2>
+
+      <h3>Data Structure: <code>PLAN_DATA</code></h3>
+      <p><strong>Type:</strong> <code>Record&lt;string, object&gt;</code><br>
+      <strong>Description:</strong> Metadata catalog for all high-speed VPN data plans.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Name</th>
+            <th>Data Quota</th>
+            <th>Price</th>
+            <th>Validity</th>
+            <th>Speed Tier</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>1gb</code></td>
+            <td>1 GB Express Tunnel</td>
+            <td>1 GB</td>
+            <td>$1.99</td>
+            <td>24 Hours</td>
+            <td>Up to 300 Mbps</td>
+          </tr>
+          <tr>
+            <td><code>1.5gb</code></td>
+            <td>1.5 GB Plus Pass</td>
+            <td>1.5 GB</td>
+            <td>$2.99</td>
+            <td>48 Hours</td>
+            <td>Up to 500 Mbps</td>
+          </tr>
+          <tr>
+            <td><code>2gb</code></td>
+            <td>2 GB Weekly Boost</td>
+            <td>2 GB</td>
+            <td>$3.99</td>
+            <td>7 Days</td>
+            <td>Up to 1 Gbps</td>
+          </tr>
+          <tr>
+            <td><code>5gb</code></td>
+            <td>5 GB Ultra Shield</td>
+            <td>5 GB</td>
+            <td>$7.99</td>
+            <td>30 Days</td>
+            <td>Uncapped Premium</td>
+          </tr>
+          <tr>
+            <td><code>10gb</code></td>
+            <td>10 GB Enterprise Max</td>
+            <td>10 GB</td>
+            <td>$12.99</td>
+            <td>60 Days</td>
+            <td>Dedicated Low-Latency</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Functions & Event Handlers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Function / Handler</th>
+            <th>Parameters</th>
+            <th>Return Type</th>
+            <th>Comprehensive Specification</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>updatePlanCard(planKey)</code></td>
+            <td><code>planKey: string</code> (e.g. <code>'1gb'</code>)</td>
+            <td><code>void</code></td>
+            <td>
+              <strong>What it does:</strong> Looks up the corresponding record in <code>PLAN_DATA</code> and updates the DOM text content of <code>#planAmount</code>, <code>#planValidity</code>, and <code>#planSpeed</code>.<br>
+              <strong>Why needed:</strong> Gives users instant visual feedback on plan pricing and specifications when selecting options in the dropdown.<br>
+              <strong>Interactions:</strong> Executed on page load and on every dropdown <code>change</code> event.
+            </td>
+          </tr>
+          <tr>
+            <td><code>rechargeForm Submit Listener</code></td>
+            <td><code>e: SubmitEvent</code></td>
+            <td><code>Promise&lt;void&gt;</code></td>
+            <td>
+              <strong>What it does:</strong> Prevents default submit, calls <code>CloudVPNAPI.processRecharge()</code> with plan details, populates the receipt modal with transaction ID, and opens the modal.<br>
+              <strong>Interactions:</strong> Triggers <code>POST /recharge/process</code> API call.
+            </td>
+          </tr>
+          <tr>
+            <td><code>logoutBtn Click Listener</code></td>
+            <td><code>e: MouseEvent</code></td>
+            <td><code>void</code></td>
+            <td>
+              <strong>What it does:</strong> Invokes <code>CloudVPNAPI.clearSession()</code> and redirects the browser back to <code>login.html</code>.
+            </td>
+          </tr>
+          <tr>
+            <td><code>modalCloseBtn Click Listener</code></td>
+            <td><code>e: MouseEvent</code></td>
+            <td><code>void</code></td>
+            <td>
+              <strong>What it does:</strong> Hides the receipt modal dialog (<code>#rechargeModal</code>).
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</body>
+</html>

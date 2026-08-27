@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudVPN+ | Documentation: signup.html</title>
+  <style>
+    :root {
+      --doc-bg: #faf8f5;
+      --doc-surface: #ffffff;
+      --doc-border: #e7e5e4;
+      --doc-text: #1c1917;
+      --doc-text-muted: #57534e;
+      --doc-brand: #b45309;
+      --doc-brand-dark: #78350f;
+      --doc-brand-light: #fef3c7;
+      --doc-code-bg: #292524;
+      --doc-code-text: #f5f5f4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--doc-bg);
+      color: var(--doc-text);
+      line-height: 1.65;
+      padding: 2.5rem 1.5rem;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background-color: var(--doc-surface);
+      border: 1px solid var(--doc-border);
+      border-radius: 16px;
+      padding: 3rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    header {
+      border-bottom: 2px solid var(--doc-border);
+      padding-bottom: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .badge {
+      display: inline-block;
+      background-color: var(--doc-brand-light);
+      color: var(--doc-brand-dark);
+      border: 1px solid var(--doc-brand);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    h1 { font-size: 2.2rem; color: var(--doc-text); margin-bottom: 0.5rem; }
+    h2 { font-size: 1.5rem; color: var(--doc-brand-dark); margin: 2.5rem 0 1rem 0; border-bottom: 1px solid var(--doc-border); padding-bottom: 0.4rem; }
+    h3 { font-size: 1.2rem; color: var(--doc-text); margin: 1.5rem 0 0.75rem 0; }
+    p, li { font-size: 1rem; color: var(--doc-text-muted); margin-bottom: 1rem; }
+    ul, ol { padding-left: 1.75rem; margin-bottom: 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+    strong { color: var(--doc-text); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border: 1px solid var(--doc-border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+    th {
+      background-color: var(--doc-brand-light);
+      color: var(--doc-brand-dark);
+      font-weight: 700;
+    }
+    tr:nth-child(even) { background-color: #fdfbf7; }
+    pre {
+      background-color: var(--doc-code-bg);
+      color: var(--doc-code-text);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.9rem;
+      margin: 1.25rem 0;
+    }
+    code {
+      font-family: Consolas, Monaco, monospace;
+      background-color: #f5f2eb;
+      color: var(--doc-brand-dark);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .callout {
+      background-color: var(--doc-brand-light);
+      border-left: 4px solid var(--doc-brand);
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: var(--doc-brand);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .back-btn:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="project_documentation.html" class="back-btn">← Back to Master Documentation</a>
+    
+    <header>
+      <span class="badge">File Specification</span>
+      <h1>File Documentation: signup_html.html</h1>
+      <p>Target File: <code>signup.html</code> | Type: HTML5 Document</p>
+    </header>
+
+    <!-- PART 1 -->
+    <section>
+      <h2>First: Purpose, Necessity & Project Fit</h2>
+      <p><strong>Why this file is necessary:</strong> <code>signup.html</code> provides the primary onboarding interface for the CloudVPN+ platform. It allows prospective users to create an account by providing their email address and configuring a secure password with a confirmation check. Without this file, new users would be unable to register credentials for the VPN service.</p>
+      
+      <p><strong>How it fits into the project:</strong> It serves as the primary gateway page of the application, linked directly from <code>index.html</code> and accessible from the login screen. It embeds the visual assets and script dependencies that orchestrate the client registration lifecycle.</p>
+
+      <p><strong>How it interacts with the project:</strong></p>
+      <ul>
+        <li><strong>Styling Interaction:</strong> Linked to <code>css/style.css</code> to render the 50/50 split canvas and the right-side light glassmorphic card.</li>
+        <li><strong>Asset Interaction:</strong> References <code>assets/images/bg.jpg</code> as the fixed background canvas.</li>
+        <li><strong>Validation Interaction:</strong> Interacts with <code>js/validation.js</code> to perform RFC 5322 email syntax validation, password complexity checking, and password matching verification.</li>
+        <li><strong>API Interaction:</strong> Interacts with <code>js/api_client.js</code> and <code>js/auth.js</code> to dispatch asynchronous registration requests to the backend endpoint <code>/auth/signup</code>.</li>
+        <li><strong>Navigation Interaction:</strong> Provides a hyperlink transition to <code>login.html</code> for registered members.</li>
+      </ul>
+    </section>
+
+    <!-- PART 2 -->
+    <section>
+      <h2>Second: Project Structure, Architecture & Design Rationale</h2>
+      <p><strong>Overall Project Structure:</strong> <code>signup.html</code> resides at the root level of the web application directory. It is structured to be completely static, requiring no pre-processors or build tools, making it 100% compatible with standard HTTP hosting.</p>
+      
+      <p><strong>Architectural Design & Rationale:</strong></p>
+      <ul>
+        <li><strong>50/50 Split Viewport:</strong> The document layout is split into two distinct structural containers using CSS flexbox. The left container (<code>.left-scene-panel</code>) remains 100% transparent to showcase the classical artwork, while the right container (<code>.right-glass-panel</code>) hosts the floating glass card (<code>.glass-card</code>).</li>
+        <li><strong>High Contrast & No Gradients:</strong> Designed strictly with solid text colors (<code>#1c1917</code>, <code>#44403c</code>) and solid amber brand accents (<code>#b45309</code>). Zero purple, zero blue, and zero pink shades are used.</li>
+        <li><strong>Accessible Semantic Markup:</strong> Includes ARIA attributes (<code>role="alert"</code>, <code>aria-live="polite"</code>) and explicit <code>&lt;label for="..."&gt;</code> tags for full screen-reader compliance.</li>
+      </ul>
+    </section>
+
+    <!-- PART 3 -->
+    <section>
+      <h2>Third: Exhaustive Element, Component & Dependency Documentation</h2>
+
+      <h3>Imported Dependencies & External Links</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Imported Resource</th>
+            <th>Source File</th>
+            <th>Reason & Interaction Mechanism</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>css/style.css</code></td>
+            <td><code>css/style.css</code></td>
+            <td>Imported via <code>&lt;link rel="stylesheet"&gt;</code> to apply glassmorphic backdrop filters, typography, layout geometry, and responsive behaviors.</td>
+          </tr>
+          <tr>
+            <td><code>js/validation.js</code></td>
+            <td><code>js/validation.js</code></td>
+            <td>Imported via <code>&lt;script&gt;</code> to expose <code>window.FormValidator</code> for real-time input sanity and match checks.</td>
+          </tr>
+          <tr>
+            <td><code>js/api_client.js</code></td>
+            <td><code>js/api_client.js</code></td>
+            <td>Imported via <code>&lt;script&gt;</code> to expose <code>window.CloudVPNAPI</code> for REST API communication.</td>
+          </tr>
+          <tr>
+            <td><code>js/auth.js</code></td>
+            <td><code>js/auth.js</code></td>
+            <td>Imported via <code>&lt;script&gt;</code> to bind submit events, handle UI feedback, and manage registration state transitions.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Key DOM Elements & Member Specifications</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Element ID / Class</th>
+            <th>HTML Element</th>
+            <th>Data Type / Attribute</th>
+            <th>Description, Purpose & Interaction</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>#signupForm</code></td>
+            <td><code>&lt;form&gt;</code></td>
+            <td><code>HTMLFormElement</code></td>
+            <td>Primary registration form. Intercepted by <code>auth.js</code> to prevent standard page reload and trigger async registration.</td>
+          </tr>
+          <tr>
+            <td><code>#signupEmail</code></td>
+            <td><code>&lt;input type="email"&gt;</code></td>
+            <td><code>HTMLInputElement (string)</code></td>
+            <td>Captures user's email address. Monitored on <code>input</code> event by <code>FormValidator.validateEmail()</code>.</td>
+          </tr>
+          <tr>
+            <td><code>#signupEmailFeedback</code></td>
+            <td><code>&lt;div&gt;</code></td>
+            <td><code>HTMLElement (aria-live)</code></td>
+            <td>Displays real-time validation error/success messages for the email field.</td>
+          </tr>
+          <tr>
+            <td><code>#signupPassword</code></td>
+            <td><code>&lt;input type="password"&gt;</code></td>
+            <td><code>HTMLInputElement (string)</code></td>
+            <td>Captures user's password. Monitored on <code>input</code> event by <code>FormValidator.validatePassword()</code>.</td>
+          </tr>
+          <tr>
+            <td><code>#signupPasswordFeedback</code></td>
+            <td><code>&lt;div&gt;</code></td>
+            <td><code>HTMLElement (aria-live)</code></td>
+            <td>Displays complexity feedback (length, alphanumeric requirement).</td>
+          </tr>
+          <tr>
+            <td><code>#signupReenterPassword</code></td>
+            <td><code>&lt;input type="password"&gt;</code></td>
+            <td><code>HTMLInputElement (string)</code></td>
+            <td>Captures password re-entry. Verified against <code>#signupPassword</code> by <code>FormValidator.validatePasswordMatch()</code>.</td>
+          </tr>
+          <tr>
+            <td><code>#signupReenterPasswordFeedback</code></td>
+            <td><code>&lt;div&gt;</code></td>
+            <td><code>HTMLElement (aria-live)</code></td>
+            <td>Displays password match confirmation or mismatch alert.</td>
+          </tr>
+          <tr>
+            <td><code>.toggle-password-btn</code></td>
+            <td><code>&lt;button type="button"&gt;</code></td>
+            <td><code>HTMLButtonElement</code></td>
+            <td>Toggles password field visibility between <code>password</code> and <code>text</code> types.</td>
+          </tr>
+          <tr>
+            <td><code>#signupSubmitBtn</code></td>
+            <td><code>&lt;button type="submit"&gt;</code></td>
+            <td><code>HTMLButtonElement</code></td>
+            <td>Submits validated form data to <code>CloudVPNAPI.signup()</code>. Disabled during active network requests.</td>
+          </tr>
+          <tr>
+            <td><code>#alertBanner</code></td>
+            <td><code>&lt;div&gt;</code></td>
+            <td><code>HTMLElement (role="alert")</code></td>
+            <td>Top-level notification container for system-level success or error feedback.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</body>
+</html>

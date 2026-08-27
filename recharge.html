@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudVPN+ | High-Speed Recharge</title>
+  <!-- Pure standard HTTP compatible stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="scene-viewport">
+    <div class="split-layout">
+      
+      <!-- Left Half: Completely Visible Artwork Showcase -->
+      <section class="left-scene-panel" aria-label="Visual Brand Scene">
+        <div class="left-brand-watermark">
+          <div class="left-brand-icon">+</div>
+          <span class="left-brand-text">CloudVPN+</span>
+        </div>
+        <div class="left-scene-footer">
+          <span class="left-scene-badge">High-Throughput Global Node</span>
+        </div>
+      </section>
+
+      <!-- Right Half: Floating Glassmorphic Recharge Container -->
+      <section class="right-glass-panel" aria-label="Recharge Form Panel">
+        <div class="glass-card">
+          
+          <header class="card-header">
+            <div class="brand-badge">
+              <span class="brand-badge-icon"></span>
+              <span>CloudVPN+ Top-Up</span>
+            </div>
+            <h1 class="card-title">Data Recharge</h1>
+            <p class="card-subtitle">Boost your high-speed bandwidth instantly</p>
+          </header>
+
+          <!-- User Status Strip -->
+          <div class="user-status-strip">
+            <span>Account: <strong id="userEmailDisplay" class="user-status-email">member@cloudvpn.plus</strong></span>
+            <button id="logoutBtn" class="input-action-btn" style="position: static; font-weight: 700; color: #78350f;">Sign Out</button>
+          </div>
+
+          <form id="rechargeForm" class="auth-form">
+            
+            <!-- Plan Selection Dropdown -->
+            <div class="form-group">
+              <label for="planSelect" class="form-label">
+                <span>Select High-Speed Data Plan</span>
+              </label>
+              <div class="input-wrapper">
+                <select id="planSelect" class="form-select" required>
+                  <option value="1gb">1gb - Express Pass ($1.99)</option>
+                  <option value="1.5gb">1.5gb - Plus Pass ($2.99)</option>
+                  <option value="2gb">2gb - Weekly Boost ($3.99)</option>
+                  <option value="5gb">5gb - Ultra Shield ($7.99)</option>
+                  <option value="10gb">10gb - Enterprise Max ($12.99)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Dynamic Selected Plan Overview Card -->
+            <div class="recharge-plan-card">
+              <div class="plan-info-row">
+                <span class="plan-label">Plan Price:</span>
+                <span id="planAmount" class="plan-price-large">$1.99</span>
+              </div>
+              <div class="plan-info-row">
+                <span class="plan-label">Validity Period:</span>
+                <span id="planValidity" class="plan-value">24 Hours</span>
+              </div>
+              <div class="plan-info-row">
+                <span class="plan-label">Tunnel Speed:</span>
+                <span id="planSpeed" class="plan-value">Up to 300 Mbps</span>
+              </div>
+            </div>
+
+            <!-- Submit Recharge Button -->
+            <button type="submit" id="rechargeSubmitBtn" class="btn-primary">
+              Confirm & Instant Recharge
+            </button>
+          </form>
+
+          <footer class="card-footer">
+            <p class="footer-text">
+              Need a custom plan? <a href="signup.html" class="footer-link">Contact CloudVPN+ Sales</a>
+            </p>
+          </footer>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Success Confirmation Modal Dialog (Vanilla HTTP Compatible) -->
+  <div id="rechargeModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content">
+      <div class="modal-icon-success">✓</div>
+      <h2 id="modalTitle" class="modal-title">Recharge Successful!</h2>
+      <p class="modal-desc">Your CloudVPN+ high-speed data allocation has been activated.</p>
+      
+      <div class="recharge-plan-card" style="margin-bottom: 1.25rem;">
+        <div class="plan-info-row">
+          <span class="plan-label">Transaction ID:</span>
+          <span id="modalTxnId" class="plan-value" style="font-family: monospace;">TXN_000000</span>
+        </div>
+        <div class="plan-info-row">
+          <span class="plan-label">Plan Name:</span>
+          <span id="modalPlan" class="plan-value">1 GB Express</span>
+        </div>
+        <div class="plan-info-row">
+          <span class="plan-label">Amount Paid:</span>
+          <span id="modalAmount" class="plan-value" style="color: #b45309;">$1.99</span>
+        </div>
+      </div>
+
+      <button type="button" id="modalCloseBtn" class="btn-primary">
+        Done / Continue Browsing
+      </button>
+    </div>
+  </div>
+
+  <!-- Client-side HTTP compatible scripts -->
+  <script src="js/api_client.js"></script>
+  <script src="js/recharge.js"></script>
+</body>
+</html>

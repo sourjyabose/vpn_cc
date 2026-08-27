@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudVPN+ | Documentation: style.css</title>
+  <style>
+    :root {
+      --doc-bg: #faf8f5;
+      --doc-surface: #ffffff;
+      --doc-border: #e7e5e4;
+      --doc-text: #1c1917;
+      --doc-text-muted: #57534e;
+      --doc-brand: #b45309;
+      --doc-brand-dark: #78350f;
+      --doc-brand-light: #fef3c7;
+      --doc-code-bg: #292524;
+      --doc-code-text: #f5f5f4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--doc-bg);
+      color: var(--doc-text);
+      line-height: 1.65;
+      padding: 2.5rem 1.5rem;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background-color: var(--doc-surface);
+      border: 1px solid var(--doc-border);
+      border-radius: 16px;
+      padding: 3rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    header {
+      border-bottom: 2px solid var(--doc-border);
+      padding-bottom: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .badge {
+      display: inline-block;
+      background-color: var(--doc-brand-light);
+      color: var(--doc-brand-dark);
+      border: 1px solid var(--doc-brand);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    h1 { font-size: 2.2rem; color: var(--doc-text); margin-bottom: 0.5rem; }
+    h2 { font-size: 1.5rem; color: var(--doc-brand-dark); margin: 2.5rem 0 1rem 0; border-bottom: 1px solid var(--doc-border); padding-bottom: 0.4rem; }
+    h3 { font-size: 1.2rem; color: var(--doc-text); margin: 1.5rem 0 0.75rem 0; }
+    p, li { font-size: 1rem; color: var(--doc-text-muted); margin-bottom: 1rem; }
+    ul, ol { padding-left: 1.75rem; margin-bottom: 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+    strong { color: var(--doc-text); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border: 1px solid var(--doc-border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+    th {
+      background-color: var(--doc-brand-light);
+      color: var(--doc-brand-dark);
+      font-weight: 700;
+    }
+    tr:nth-child(even) { background-color: #fdfbf7; }
+    pre {
+      background-color: var(--doc-code-bg);
+      color: var(--doc-code-text);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.9rem;
+      margin: 1.25rem 0;
+    }
+    code {
+      font-family: Consolas, Monaco, monospace;
+      background-color: #f5f2eb;
+      color: var(--doc-brand-dark);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: var(--doc-brand);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .back-btn:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="project_documentation.html" class="back-btn">← Back to Master Documentation</a>
+    
+    <header>
+      <span class="badge">Stylesheet Specification</span>
+      <h1>File Documentation: style_css.html</h1>
+      <p>Target File: <code>css/style.css</code> | Type: Cascading Style Sheet</p>
+    </header>
+
+    <!-- PART 1 -->
+    <section>
+      <h2>First: Purpose, Necessity & Project Fit</h2>
+      <p><strong>Why this file is necessary:</strong> <code>style.css</code> serves as the central visual engine of the entire CloudVPN+ web application. It encapsulates the core glassmorphic styling, floating card geometry, responsive layout constraints, high-contrast typography, and strict color guardrails.</p>
+      
+      <p><strong>How it fits into the project:</strong> Every HTML page (<code>signup.html</code>, <code>login.html</code>, <code>recharge.html</code>) imports <code>style.css</code> to ensure absolute visual consistency across all user touchpoints.</p>
+
+      <p><strong>How it interacts with the project:</strong></p>
+      <ul>
+        <li>Binds the classical artwork <code>assets/images/bg.jpg</code> to the viewport background with fixed attachment and cover scaling.</li>
+        <li>Defines CSS variables in <code>:root</code> that are referenced across all UI components.</li>
+        <li>Controls dynamic classes applied by JavaScript (e.g. <code>.is-valid</code>, <code>.is-invalid</code>, <code>.hidden</code>).</li>
+      </ul>
+    </section>
+
+    <!-- PART 2 -->
+    <section>
+      <h2>Second: Project Structure, Architecture & Design Rationale</h2>
+      <p><strong>Design System Principles:</strong></p>
+      <ul>
+        <li><strong>Strict Color Compliance:</strong> Prohibits any shades of purple, blue, or pink. Uses warm ivory, rich charcoal (<code>#1c1917</code>), deep amber (<code>#b45309</code>), and natural earth tones.</li>
+        <li><strong>No Color Gradients:</strong> Color properties are defined strictly using solid hex and alpha-blended solids (<code>rgba</code>), preventing multi-color gradients.</li>
+        <li><strong>Glassmorphism Physics:</strong> Uses <code>backdrop-filter: blur(16px)</code> and <code>-webkit-backdrop-filter: blur(16px)</code> with high-opacity white backgrounds (<code>rgba(255, 255, 255, 0.82)</code>) and crisp solid border strokes (<code>1px solid rgba(255, 255, 255, 0.95)</code>) to ensure high text contrast.</li>
+        <li><strong>50/50 Split Viewport Architecture:</strong> Uses Flexbox (<code>.left-scene-panel</code> and <code>.right-glass-panel</code>) to keep the left side completely unobstructed and float the card on the right side.</li>
+      </ul>
+    </section>
+
+    <!-- PART 3 -->
+    <section>
+      <h2>Third: Exhaustive Variable & Class Member Documentation</h2>
+
+      <h3>CSS Custom Properties (Variables)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Variable Name</th>
+            <th>Type / Value</th>
+            <th>Purpose & Usage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>--glass-bg</code></td>
+            <td><code>rgba(255, 255, 255, 0.82)</code></td>
+            <td>Primary frosted glass card background. Ensures text contrast over artwork.</td>
+          </tr>
+          <tr>
+            <td><code>--glass-border</code></td>
+            <td><code>rgba(255, 255, 255, 0.95)</code></td>
+            <td>Crisp border highlight giving the glass panel a sharp, floating physical edge.</td>
+          </tr>
+          <tr>
+            <td><code>--text-primary</code></td>
+            <td><code>#1c1917 (Solid Charcoal)</code></td>
+            <td>Deep high-contrast font color for headings, labels, and primary body text.</td>
+          </tr>
+          <tr>
+            <td><code>--text-secondary</code></td>
+            <td><code>#44403c (Solid Stone)</code></td>
+            <td>Subtitles, secondary labels, and descriptive notes.</td>
+          </tr>
+          <tr>
+            <td><code>--brand-primary</code></td>
+            <td><code>#b45309 (Solid Amber)</code></td>
+            <td>Primary action buttons, brand badges, and active focus highlights.</td>
+          </tr>
+          <tr>
+            <td><code>--brand-hover</code></td>
+            <td><code>#92400e (Solid Dark Amber)</code></td>
+            <td>Button hover state color.</td>
+          </tr>
+          <tr>
+            <td><code>--brand-light</code></td>
+            <td><code>#fef3c7 (Solid Warm Cream)</code></td>
+            <td>Background for status badges and user account strips.</td>
+          </tr>
+          <tr>
+            <td><code>--status-error-text</code></td>
+            <td><code>#991b1b (Solid Brick Red)</code></td>
+            <td>High contrast error messages (no pink).</td>
+          </tr>
+          <tr>
+            <td><code>--status-success-text</code></td>
+            <td><code>#166534 (Solid Forest Green)</code></td>
+            <td>Success feedback text and validation indicators.</td>
+          </tr>
+          <tr>
+            <td><code>--shadow-floating</code></td>
+            <td><code>0 20px 45px rgba(28,25,23,0.16)...</code></td>
+            <td>Multi-layered box-shadow creating the physical floating elevation effect.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Major CSS Classes & Component Rules</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Class Selector</th>
+            <th>Target HTML Element</th>
+            <th>Behavior & Visual Attributes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>.scene-viewport</code></td>
+            <td><code>&lt;main&gt;</code></td>
+            <td>Full-screen background container binding <code>bg.jpg</code>.</td>
+          </tr>
+          <tr>
+            <td><code>.split-layout</code></td>
+            <td><code>&lt;div&gt;</code></td>
+            <td>Flex container dividing horizontal space 50/50.</td>
+          </tr>
+          <tr>
+            <td><code>.left-scene-panel</code></td>
+            <td><code>&lt;section&gt;</code></td>
+            <td>Left 50% container with <code>pointer-events: none</code>, keeping artwork unobstructed.</td>
+          </tr>
+          <tr>
+            <td><code>.right-glass-panel</code></td>
+            <td><code>&lt;section&gt;</code></td>
+            <td>Right 50% flex container centering the floating glass card.</td>
+          </tr>
+          <tr>
+            <td><code>.glass-card</code></td>
+            <td><code>&lt;div&gt;</code></td>
+            <td>Card element with <code>backdrop-filter: blur(16px)</code>, 22px rounded corners, and floating shadow.</td>
+          </tr>
+          <tr>
+            <td><code>.form-input</code></td>
+            <td><code>&lt;input&gt;</code></td>
+            <td>Input control with <code>rgba(255,255,255,0.92)</code> background and transition effects.</td>
+          </tr>
+          <tr>
+            <td><code>.form-input.is-valid</code></td>
+            <td><code>&lt;input&gt;</code></td>
+            <td>Applies solid green border and light green tint when field passes validation.</td>
+          </tr>
+          <tr>
+            <td><code>.form-input.is-invalid</code></td>
+            <td><code>&lt;input&gt;</code></td>
+            <td>Applies solid red border and light red tint when field fails validation.</td>
+          </tr>
+          <tr>
+            <td><code>.btn-primary</code></td>
+            <td><code>&lt;button&gt;</code></td>
+            <td>Solid amber action button with hover elevation and active press states (strictly no gradients).</td>
+          </tr>
+          <tr>
+            <td><code>.modal-overlay</code></td>
+            <td><code>&lt;div&gt;</code></td>
+            <td>Fixed fullscreen backdrop (<code>rgba(28,25,23,0.6)</code>) for recharge receipt dialogs.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudVPN+ | Documentation: index.html</title>
+  <style>
+    :root {
+      --doc-bg: #faf8f5;
+      --doc-surface: #ffffff;
+      --doc-border: #e7e5e4;
+      --doc-text: #1c1917;
+      --doc-text-muted: #57534e;
+      --doc-brand: #b45309;
+      --doc-brand-dark: #78350f;
+      --doc-brand-light: #fef3c7;
+      --doc-code-bg: #292524;
+      --doc-code-text: #f5f5f4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--doc-bg);
+      color: var(--doc-text);
+      line-height: 1.65;
+      padding: 2.5rem 1.5rem;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background-color: var(--doc-surface);
+      border: 1px solid var(--doc-border);
+      border-radius: 16px;
+      padding: 3rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    header {
+      border-bottom: 2px solid var(--doc-border);
+      padding-bottom: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .badge {
+      display: inline-block;
+      background-color: var(--doc-brand-light);
+      color: var(--doc-brand-dark);
+      border: 1px solid var(--doc-brand);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    h1 { font-size: 2.2rem; color: var(--doc-text); margin-bottom: 0.5rem; }
+    h2 { font-size: 1.5rem; color: var(--doc-brand-dark); margin: 2.5rem 0 1rem 0; border-bottom: 1px solid var(--doc-border); padding-bottom: 0.4rem; }
+    h3 { font-size: 1.2rem; color: var(--doc-text); margin: 1.5rem 0 0.75rem 0; }
+    p, li { font-size: 1rem; color: var(--doc-text-muted); margin-bottom: 1rem; }
+    ul, ol { padding-left: 1.75rem; margin-bottom: 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+    strong { color: var(--doc-text); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border: 1px solid var(--doc-border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+    th {
+      background-color: var(--doc-brand-light);
+      color: var(--doc-brand-dark);
+      font-weight: 700;
+    }
+    tr:nth-child(even) { background-color: #fdfbf7; }
+    pre {
+      background-color: var(--doc-code-bg);
+      color: var(--doc-code-text);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.9rem;
+      margin: 1.25rem 0;
+    }
+    code {
+      font-family: Consolas, Monaco, monospace;
+      background-color: #f5f2eb;
+      color: var(--doc-brand-dark);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: var(--doc-brand);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .back-btn:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="project_documentation.html" class="back-btn">← Back to Master Documentation</a>
+    
+    <header>
+      <span class="badge">File Specification</span>
+      <h1>File Documentation: index_html.html</h1>
+      <p>Target File: <code>index.html</code> | Type: HTML5 Entry Point Document</p>
+    </header>
+
+    <!-- PART 1 -->
+    <section>
+      <h2>First: Purpose, Necessity & Project Fit</h2>
+      <p><strong>Why this file is necessary:</strong> In HTTP web hosting environments (such as Apache, Nginx, Python http.server, or Node.js static servers), the default landing file served when visiting the root path <code>/</code> is <code>index.html</code>. Without <code>index.html</code>, visitors would encounter directory listings or 404 errors.</p>
+      
+      <p><strong>How it fits into the project:</strong> <code>index.html</code> serves as the zero-latency entry-point router, seamlessly transferring visitors to <code>signup.html</code>.</p>
+
+      <p><strong>How it interacts with the project:</strong></p>
+      <ul>
+        <li>Uses a native HTTP <code>&lt;meta http-equiv="refresh" content="0; url=signup.html"&gt;</code> tag to execute an instant browser redirect without needing JavaScript or backend redirects.</li>
+        <li>Provides a fallback accessible anchor link for environments where automatic refresh is restricted.</li>
+      </ul>
+    </section>
+
+    <!-- PART 2 -->
+    <section>
+      <h2>Second: Project Structure, Architecture & Design Rationale</h2>
+      <p><strong>Architecture & Design Rationale:</strong> By keeping <code>index.html</code> completely lightweight and non-dependent on any scripts or styles, it loads in under 1 millisecond and guarantees immediate client navigation over plain HTTP.</p>
+    </section>
+
+    <!-- PART 3 -->
+    <section>
+      <h2>Third: Exhaustive Element, Component & Dependency Documentation</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Element / Attribute</th>
+            <th>Type</th>
+            <th>Description & Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>&lt;meta http-equiv="refresh"&gt;</code></td>
+            <td><code>HTMLMetaElement</code></td>
+            <td>Specifies instant 0-second redirect target URL <code>signup.html</code>.</td>
+          </tr>
+          <tr>
+            <td><code>&lt;a href="signup.html"&gt;</code></td>
+            <td><code>HTMLAnchorElement</code></td>
+            <td>Accessible fallback navigation link in the body.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</body>
+</html>

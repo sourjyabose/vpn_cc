@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudVPN+ | Documentation: validation.js</title>
+  <style>
+    :root {
+      --doc-bg: #faf8f5;
+      --doc-surface: #ffffff;
+      --doc-border: #e7e5e4;
+      --doc-text: #1c1917;
+      --doc-text-muted: #57534e;
+      --doc-brand: #b45309;
+      --doc-brand-dark: #78350f;
+      --doc-brand-light: #fef3c7;
+      --doc-code-bg: #292524;
+      --doc-code-text: #f5f5f4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--doc-bg);
+      color: var(--doc-text);
+      line-height: 1.65;
+      padding: 2.5rem 1.5rem;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background-color: var(--doc-surface);
+      border: 1px solid var(--doc-border);
+      border-radius: 16px;
+      padding: 3rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    header {
+      border-bottom: 2px solid var(--doc-border);
+      padding-bottom: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .badge {
+      display: inline-block;
+      background-color: var(--doc-brand-light);
+      color: var(--doc-brand-dark);
+      border: 1px solid var(--doc-brand);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    h1 { font-size: 2.2rem; color: var(--doc-text); margin-bottom: 0.5rem; }
+    h2 { font-size: 1.5rem; color: var(--doc-brand-dark); margin: 2.5rem 0 1rem 0; border-bottom: 1px solid var(--doc-border); padding-bottom: 0.4rem; }
+    h3 { font-size: 1.2rem; color: var(--doc-text); margin: 1.5rem 0 0.75rem 0; }
+    p, li { font-size: 1rem; color: var(--doc-text-muted); margin-bottom: 1rem; }
+    ul, ol { padding-left: 1.75rem; margin-bottom: 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+    strong { color: var(--doc-text); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border: 1px solid var(--doc-border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+    th {
+      background-color: var(--doc-brand-light);
+      color: var(--doc-brand-dark);
+      font-weight: 700;
+    }
+    tr:nth-child(even) { background-color: #fdfbf7; }
+    pre {
+      background-color: var(--doc-code-bg);
+      color: var(--doc-code-text);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.9rem;
+      margin: 1.25rem 0;
+    }
+    code {
+      font-family: Consolas, Monaco, monospace;
+      background-color: #f5f2eb;
+      color: var(--doc-brand-dark);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .callout {
+      background-color: var(--doc-brand-light);
+      border-left: 4px solid var(--doc-brand);
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: var(--doc-brand);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .back-btn:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="project_documentation.html" class="back-btn">← Back to Master Documentation</a>
+    
+    <header>
+      <span class="badge">Module Specification</span>
+      <h1>File Documentation: validation_js.html</h1>
+      <p>Target File: <code>js/validation.js</code> | Type: ECMAScript 6 Vanilla JavaScript Module</p>
+    </header>
+
+    <!-- PART 1 -->
+    <section>
+      <h2>First: Purpose, Necessity & Project Fit</h2>
+      <p><strong>Why this file is necessary:</strong> <code>validation.js</code> enforces strict client-side data hygiene and user experience feedback. It guarantees that malformed emails, weak passwords, and mismatched confirmation inputs are detected instantly in real-time before network requests are ever triggered.</p>
+      
+      <p><strong>How it fits into the project:</strong> It acts as a shared utility imported by both <code>signup.html</code> and <code>login.html</code>, providing a single source of truth for all validation rules.</p>
+
+      <p><strong>How it interacts with the project:</strong></p>
+      <ul>
+        <li>Exposes the global static class <code>FormValidator</code> on the <code>window</code> object.</li>
+        <li>Invoked by <code>auth.js</code> inside DOM event listeners (<code>input</code>, <code>change</code>, <code>submit</code>).</li>
+        <li>Manipulates DOM class lists (<code>.is-valid</code>, <code>.is-invalid</code>) styled by <code>style.css</code>.</li>
+      </ul>
+    </section>
+
+    <!-- PART 2 -->
+    <section>
+      <h2>Second: Project Structure, Architecture & Design Rationale</h2>
+      <p><strong>Architecture & Design Rationale:</strong> Implemented as a purely stateless static class (<code>FormValidator</code>). By avoiding instance state, methods are pure functions that take inputs and return deterministic result objects (<code>{ isValid: boolean, message: string }</code>), maximizing testability and preventing memory leaks.</p>
+      
+      <p><strong>RFC 5322 Standard Email Pattern:</strong> Employs the industry-standard regex <code>/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/</code> to validate email strings accurately without false positives.</p>
+    </section>
+
+    <!-- PART 3 -->
+    <section>
+      <h2>Third: Exhaustive Class & Method Documentation</h2>
+
+      <h3>Class: <code>FormValidator</code></h3>
+      <p><strong>Scope:</strong> Global (attached to <code>window.FormValidator</code>)<br>
+      <strong>Description:</strong> Static utility class for form validation and DOM feedback manipulation.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Method Name</th>
+            <th>Parameters</th>
+            <th>Return Type</th>
+            <th>Comprehensive Specification</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>validateEmail(email)</code></td>
+            <td><code>email: string</code></td>
+            <td><code>{ isValid: boolean, message: string }</code></td>
+            <td>
+              <strong>What it does:</strong> Trims whitespace, checks for non-empty string, executes RFC 5322 regex test, checks max length limit (254 chars).<br>
+              <strong>Why needed:</strong> Prevents malformed emails from reaching backend authentication endpoints.<br>
+              <strong>Interactions:</strong> Called by <code>auth.js</code> on <code>#signupEmail</code> and <code>#loginEmail</code> input events.
+            </td>
+          </tr>
+          <tr>
+            <td><code>validatePassword(password)</code></td>
+            <td><code>password: string</code></td>
+            <td><code>{ isValid: boolean, message: string, score: number }</code></td>
+            <td>
+              <strong>What it does:</strong> Validates length (8 to 128 chars), checks for presence of both letters and numbers, calculates strength score.<br>
+              <strong>Why needed:</strong> Ensures user accounts are secured with strong credentials.<br>
+              <strong>Interactions:</strong> Called on <code>#signupPassword</code> in <code>signup.html</code>.
+            </td>
+          </tr>
+          <tr>
+            <td><code>validatePasswordMatch(password, reenterPassword)</code></td>
+            <td><code>password: string</code>,<br><code>reenterPassword: string</code></td>
+            <td><code>{ isValid: boolean, message: string }</code></td>
+            <td>
+              <strong>What it does:</strong> Compares the confirmation password against the primary password for strict equality (<code>password === reenterPassword</code>).<br>
+              <strong>Why needed:</strong> Prevents typo errors when setting passwords.<br>
+              <strong>Interactions:</strong> Called on <code>#signupReenterPassword</code> in <code>signup.html</code>.
+            </td>
+          </tr>
+          <tr>
+            <td><code>applyFieldStatus(inputEl, feedbackEl, isValid, message)</code></td>
+            <td>
+              <code>inputEl: HTMLInputElement</code>,<br>
+              <code>feedbackEl: HTMLElement</code>,<br>
+              <code>isValid: boolean</code>,<br>
+              <code>message: string</code>
+            </td>
+            <td><code>void</code></td>
+            <td>
+              <strong>What it does:</strong> Adds/removes CSS classes <code>.is-valid</code> / <code>.is-invalid</code> on the input element, updates feedback text, and sets <code>.success</code> / <code>.error</code> classes on the feedback element.<br>
+              <strong>Why needed:</strong> Synchronizes visual validation states with user input in real-time.
+            </td>
+          </tr>
+          <tr>
+            <td><code>clearFieldStatus(inputEl, feedbackEl)</code></td>
+            <td>
+              <code>inputEl: HTMLInputElement</code>,<br>
+              <code>feedbackEl: HTMLElement</code>
+            </td>
+            <td><code>void</code></td>
+            <td>
+              <strong>What it does:</strong> Removes all validity CSS classes and clears feedback text when inputs are emptied.<br>
+              <strong>Why needed:</strong> Resets fields to their pristine resting state.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</body>
+</html>

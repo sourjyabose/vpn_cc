@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudVPN+ | Documentation: api_client.js</title>
+  <style>
+    :root {
+      --doc-bg: #faf8f5;
+      --doc-surface: #ffffff;
+      --doc-border: #e7e5e4;
+      --doc-text: #1c1917;
+      --doc-text-muted: #57534e;
+      --doc-brand: #b45309;
+      --doc-brand-dark: #78350f;
+      --doc-brand-light: #fef3c7;
+      --doc-code-bg: #292524;
+      --doc-code-text: #f5f5f4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--doc-bg);
+      color: var(--doc-text);
+      line-height: 1.65;
+      padding: 2.5rem 1.5rem;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background-color: var(--doc-surface);
+      border: 1px solid var(--doc-border);
+      border-radius: 16px;
+      padding: 3rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    header {
+      border-bottom: 2px solid var(--doc-border);
+      padding-bottom: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .badge {
+      display: inline-block;
+      background-color: var(--doc-brand-light);
+      color: var(--doc-brand-dark);
+      border: 1px solid var(--doc-brand);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    h1 { font-size: 2.2rem; color: var(--doc-text); margin-bottom: 0.5rem; }
+    h2 { font-size: 1.5rem; color: var(--doc-brand-dark); margin: 2.5rem 0 1rem 0; border-bottom: 1px solid var(--doc-border); padding-bottom: 0.4rem; }
+    h3 { font-size: 1.2rem; color: var(--doc-text); margin: 1.5rem 0 0.75rem 0; }
+    p, li { font-size: 1rem; color: var(--doc-text-muted); margin-bottom: 1rem; }
+    ul, ol { padding-left: 1.75rem; margin-bottom: 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+    strong { color: var(--doc-text); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border: 1px solid var(--doc-border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+    th {
+      background-color: var(--doc-brand-light);
+      color: var(--doc-brand-dark);
+      font-weight: 700;
+    }
+    tr:nth-child(even) { background-color: #fdfbf7; }
+    pre {
+      background-color: var(--doc-code-bg);
+      color: var(--doc-code-text);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.9rem;
+      margin: 1.25rem 0;
+    }
+    code {
+      font-family: Consolas, Monaco, monospace;
+      background-color: #f5f2eb;
+      color: var(--doc-brand-dark);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: var(--doc-brand);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .back-btn:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="project_documentation.html" class="back-btn">← Back to Master Documentation</a>
+    
+    <header>
+      <span class="badge">Module Specification</span>
+      <h1>File Documentation: api_client_js.html</h1>
+      <p>Target File: <code>js/api_client.js</code> | Type: ECMAScript 6 REST API Service Layer</p>
+    </header>
+
+    <!-- PART 1 -->
+    <section>
+      <h2>First: Purpose, Necessity & Project Fit</h2>
+      <p><strong>Why this file is necessary:</strong> In keeping with the strict project requirement (<em>"Don't write any backend code it will be written only and only by me"</em>), <code>api_client.js</code> isolates all HTTP network communication into a clean, decoupled abstraction layer. When the user builds their custom backend, they do not need to alter any UI DOM code; they simply configure the endpoint URLs in this client.</p>
+      
+      <p><strong>How it fits into the project:</strong> It sits between the user interface controllers (<code>auth.js</code>, <code>recharge.js</code>) and the external HTTP server.</p>
+
+      <p><strong>How it interacts with the project:</strong></p>
+      <ul>
+        <li>Exposes a global singleton <code>window.CloudVPNAPI</code>.</li>
+        <li>Manages session tokens and authenticated user metadata via browser <code>localStorage</code> / <code>sessionStorage</code>.</li>
+        <li>Dispatches HTTP JSON requests using standard <code>fetch()</code> API.</li>
+        <li>Includes a graceful fallback handler (<code>_mockFallback</code>) allowing the frontend to be fully interactive even prior to backend deployment.</li>
+      </ul>
+    </section>
+
+    <!-- PART 2 -->
+    <section>
+      <h2>Second: Project Structure, Architecture & Design Rationale</h2>
+      <p><strong>Architecture & Design Rationale:</strong> Implements the <strong>Client Adapter Pattern</strong>. By centralizing HTTP headers, bearer tokens, error parsing, and serialization in one class (<code>CloudVPNAPIClient</code>), other modules remain concise and focused exclusively on UI logic.</p>
+    </section>
+
+    <!-- PART 3 -->
+    <section>
+      <h2>Third: Exhaustive Class, Member & Method Documentation</h2>
+
+      <h3>Class: <code>CloudVPNAPIClient</code></h3>
+      <p><strong>Description:</strong> Core network service class managing HTTP REST requests, authentication tokens, and fallback simulation.</p>
+
+      <h4>Class Properties / Member Variables:</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Member Variable</th>
+            <th>Data Type</th>
+            <th>Description & Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>this.baseUrl</code></td>
+            <td><code>string</code></td>
+            <td>Base URL for HTTP REST API calls (defaults to <code>window.location.origin + '/api/v1'</code>).</td>
+          </tr>
+          <tr>
+            <td><code>this.tokenKey</code></td>
+            <td><code>string</code></td>
+            <td>Storage key name (<code>'cloudvpn_auth_token'</code>) used to store authentication tokens.</td>
+          </tr>
+          <tr>
+            <td><code>this.userKey</code></td>
+            <td><code>string</code></td>
+            <td>Storage key name (<code>'cloudvpn_user_data'</code>) used to store serializable user profile objects.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Methods:</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Method Signature</th>
+            <th>Parameters</th>
+            <th>Return Type</th>
+            <th>Detailed Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>getToken()</code></td>
+            <td>None</td>
+            <td><code>string | null</code></td>
+            <td>Retrieves the active JWT or bearer token from storage.</td>
+          </tr>
+          <tr>
+            <td><code>setSession(token, user, remember)</code></td>
+            <td>
+              <code>token: string</code>,<br>
+              <code>user: object</code>,<br>
+              <code>remember: boolean = true</code>
+            </td>
+            <td><code>void</code></td>
+            <td>Stores the authentication token and serialized user JSON in <code>localStorage</code> (or <code>sessionStorage</code>).</td>
+          </tr>
+          <tr>
+            <td><code>clearSession()</code></td>
+            <td>None</td>
+            <td><code>void</code></td>
+            <td>Removes all authentication tokens and cached user data from browser storage on logout.</td>
+          </tr>
+          <tr>
+            <td><code>getCurrentUser()</code></td>
+            <td>None</td>
+            <td><code>object | null</code></td>
+            <td>Parses and returns the currently logged-in user profile, or <code>null</code> if unauthenticated.</td>
+          </tr>
+          <tr>
+            <td><code>async request(endpoint, method, body)</code></td>
+            <td>
+              <code>endpoint: string</code>,<br>
+              <code>method: string = 'GET'</code>,<br>
+              <code>body: object = null</code>
+            </td>
+            <td><code>Promise&lt;object&gt;</code></td>
+            <td>
+              Executes a standard HTTP JSON request via <code>fetch()</code>. Attaches <code>Authorization: Bearer &lt;token&gt;</code> if available. Catches network failures and routes to <code>_mockFallback</code> when no backend is running.
+            </td>
+          </tr>
+          <tr>
+            <td><code>async _mockFallback(endpoint, method, body)</code></td>
+            <td>
+              <code>endpoint: string</code>,<br>
+              <code>method: string</code>,<br>
+              <code>body: object</code>
+            </td>
+            <td><code>Promise&lt;object&gt;</code></td>
+            <td>
+              Simulates realistic backend responses for signup, login, and recharge during frontend prototyping.
+            </td>
+          </tr>
+          <tr>
+            <td><code>async signup(payload)</code></td>
+            <td><code>payload: { email, password }</code></td>
+            <td><code>Promise&lt;object&gt;</code></td>
+            <td>Dispatches <code>POST /auth/signup</code> to create a new user account.</td>
+          </tr>
+          <tr>
+            <td><code>async login(payload)</code></td>
+            <td><code>payload: { email, password }</code></td>
+            <td><code>Promise&lt;object&gt;</code></td>
+            <td>Dispatches <code>POST /auth/login</code> to authenticate user credentials.</td>
+          </tr>
+          <tr>
+            <td><code>async processRecharge(payload)</code></td>
+            <td><code>payload: { plan, amount, userEmail }</code></td>
+            <td><code>Promise&lt;object&gt;</code></td>
+            <td>Dispatches <code>POST /recharge/process</code> to execute data top-up transactions.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</body>
+</html>

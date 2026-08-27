@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudVPN+ | REST API Documentation</title>
+  <style>
+    :root {
+      --doc-bg: #faf8f5;
+      --doc-surface: #ffffff;
+      --doc-border: #e7e5e4;
+      --doc-text: #1c1917;
+      --doc-text-muted: #57534e;
+      --doc-brand: #b45309;
+      --doc-brand-dark: #78350f;
+      --doc-brand-light: #fef3c7;
+      --doc-code-bg: #292524;
+      --doc-code-text: #f5f5f4;
+      --method-post: #b45309;
+      --method-get: #166534;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--doc-bg);
+      color: var(--doc-text);
+      line-height: 1.65;
+      padding: 2.5rem 1.5rem;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background-color: var(--doc-surface);
+      border: 1px solid var(--doc-border);
+      border-radius: 16px;
+      padding: 3rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    header {
+      border-bottom: 2px solid var(--doc-border);
+      padding-bottom: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .badge {
+      display: inline-block;
+      background-color: var(--doc-brand-light);
+      color: var(--doc-brand-dark);
+      border: 1px solid var(--doc-brand);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    h1 { font-size: 2.4rem; color: var(--doc-text); margin-bottom: 0.5rem; }
+    h2 { font-size: 1.6rem; color: var(--doc-brand-dark); margin: 2.5rem 0 1rem 0; border-bottom: 1px solid var(--doc-border); padding-bottom: 0.4rem; }
+    h3 { font-size: 1.25rem; color: var(--doc-text); margin: 1.5rem 0 0.75rem 0; }
+    p, li { font-size: 1rem; color: var(--doc-text-muted); margin-bottom: 1rem; }
+    ul, ol { padding-left: 1.75rem; margin-bottom: 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+    strong { color: var(--doc-text); }
+    .method-tag {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-right: 0.5rem;
+    }
+    .method-post { background-color: var(--method-post); }
+    .method-get { background-color: var(--method-get); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border: 1px solid var(--doc-border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+    th {
+      background-color: var(--doc-brand-light);
+      color: var(--doc-brand-dark);
+      font-weight: 700;
+    }
+    tr:nth-child(even) { background-color: #fdfbf7; }
+    pre {
+      background-color: var(--doc-code-bg);
+      color: var(--doc-code-text);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.9rem;
+      margin: 1.25rem 0;
+    }
+    code {
+      font-family: Consolas, Monaco, monospace;
+      background-color: #f5f2eb;
+      color: var(--doc-brand-dark);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .endpoint-card {
+      border: 1px solid var(--doc-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      background-color: #ffffff;
+    }
+    .endpoint-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--doc-text);
+    }
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: var(--doc-brand);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .back-btn:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="project_documentation.html" class="back-btn">← Back to Master Documentation</a>
+
+    <header>
+      <span class="badge">API Specification & Contract</span>
+      <h1>CloudVPN+ — Master REST API Documentation</h1>
+      <p>Exhaustive specifications for all HTTP REST API endpoints consumed by the frontend application, mapping each endpoint directly to its calling files, classes, and controller functions.</p>
+    </header>
+
+    <section>
+      <h2>API Overview & Integration Matrix</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>HTTP Endpoint</th>
+            <th>Calling File(s)</th>
+            <th>Calling Class</th>
+            <th>Calling Function(s)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>POST /api/v1/auth/signup</code></td>
+            <td><code>js/api_client.js</code>,<br><code>js/auth.js</code></td>
+            <td><code>CloudVPNAPIClient</code></td>
+            <td><code>CloudVPNAPIClient.signup()</code>,<br><code>signupForm submit listener</code></td>
+          </tr>
+          <tr>
+            <td><code>POST /api/v1/auth/login</code></td>
+            <td><code>js/api_client.js</code>,<br><code>js/auth.js</code></td>
+            <td><code>CloudVPNAPIClient</code></td>
+            <td><code>CloudVPNAPIClient.login()</code>,<br><code>loginForm submit listener</code>,<br><code>window.login_succ()</code></td>
+          </tr>
+          <tr>
+            <td><code>POST /api/v1/recharge/process</code></td>
+            <td><code>js/api_client.js</code>,<br><code>js/recharge.js</code></td>
+            <td><code>CloudVPNAPIClient</code></td>
+            <td><code>CloudVPNAPIClient.processRecharge()</code>,<br><code>rechargeForm submit listener</code></td>
+          </tr>
+          <tr>
+            <td><code>GET /api/v1/user/session</code></td>
+            <td><code>js/api_client.js</code></td>
+            <td><code>CloudVPNAPIClient</code></td>
+            <td><code>CloudVPNAPIClient.getCurrentUser()</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ENDPOINT 1 -->
+    <section class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-tag method-post">POST</span>
+        <code>/api/v1/auth/signup</code>
+      </div>
+      <p><strong>Description:</strong> Registers a new user account with CloudVPN+.</p>
+
+      <h3>Usage Mapping</h3>
+      <ul>
+        <li><strong>Consuming File:</strong> <code>js/api_client.js</code> & <code>js/auth.js</code></li>
+        <li><strong>Consuming Class:</strong> <code>CloudVPNAPIClient</code></li>
+        <li><strong>Consuming Function:</strong> <code>async signup(payload)</code></li>
+      </ul>
+
+      <h3>Request Headers</h3>
+      <pre>Content-Type: application/json
+Accept: application/json</pre>
+
+      <h3>Request Payload Schema (JSON)</h3>
+      <pre>{
+  "email": "user@example.com",        // string, required (valid email format)
+  "password": "StrongPassword123"      // string, required (min 8 chars, alphanumeric)
+}</pre>
+
+      <h3>Success Response (201 Created / 200 OK)</h3>
+      <pre>{
+  "status": "success",
+  "message": "Account created successfully",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": "usr_98124",
+    "email": "user@example.com",
+    "createdAt": "2026-08-26T17:15:00Z"
+  }
+}</pre>
+
+      <h3>Error Response (400 Bad Request / 409 Conflict)</h3>
+      <pre>{
+  "status": "error",
+  "message": "An account with this email address already exists."
+}</pre>
+
+      <h3>cURL Example</h3>
+      <pre>curl -X POST http://localhost:8080/api/v1/auth/signup \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@cloudvpn.plus","password":"SecretPassword1"}'</pre>
+    </section>
+
+    <!-- ENDPOINT 2 -->
+    <section class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-tag method-post">POST</span>
+        <code>/api/v1/auth/login</code>
+      </div>
+      <p><strong>Description:</strong> Authenticates existing user credentials and returns a session token. Upon receipt, triggers <code>window.login_succ()</code>.</p>
+
+      <h3>Usage Mapping</h3>
+      <ul>
+        <li><strong>Consuming File:</strong> <code>js/api_client.js</code> & <code>js/auth.js</code></li>
+        <li><strong>Consuming Class:</strong> <code>CloudVPNAPIClient</code></li>
+        <li><strong>Consuming Function:</strong> <code>async login(payload)</code>, invokes <code>window.login_succ(response)</code></li>
+      </ul>
+
+      <h3>Request Payload Schema (JSON)</h3>
+      <pre>{
+  "email": "user@example.com",        // string, required
+  "password": "UserPassword123"       // string, required
+}</pre>
+
+      <h3>Success Response (200 OK)</h3>
+      <pre>{
+  "status": "success",
+  "message": "Authentication successful",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": "usr_789456",
+    "email": "user@example.com",
+    "lastLogin": "2026-08-26T17:15:00Z"
+  }
+}</pre>
+
+      <h3>Error Response (401 Unauthorized)</h3>
+      <pre>{
+  "status": "error",
+  "message": "Invalid email or password."
+}</pre>
+
+      <h3>cURL Example</h3>
+      <pre>curl -X POST http://localhost:8080/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@cloudvpn.plus","password":"SecretPassword1"}'</pre>
+    </section>
+
+    <!-- ENDPOINT 3 -->
+    <section class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-tag method-post">POST</span>
+        <code>/api/v1/recharge/process</code>
+      </div>
+      <p><strong>Description:</strong> Processes a high-speed data quota top-up for the active account.</p>
+
+      <h3>Usage Mapping</h3>
+      <ul>
+        <li><strong>Consuming File:</strong> <code>js/api_client.js</code> & <code>js/recharge.js</code></li>
+        <li><strong>Consuming Class:</strong> <code>CloudVPNAPIClient</code></li>
+        <li><strong>Consuming Function:</strong> <code>async processRecharge(payload)</code></li>
+      </ul>
+
+      <h3>Request Headers</h3>
+      <pre>Content-Type: application/json
+Accept: application/json
+Authorization: Bearer &lt;auth_token&gt;</pre>
+
+      <h3>Request Payload Schema (JSON)</h3>
+      <pre>{
+  "plan": "1.5gb",                    // string, required (options: '1gb', '1.5gb', '2gb', '5gb', '10gb')
+  "amount": "$2.99",                  // string, required
+  "userEmail": "user@cloudvpn.plus"   // string, required
+}</pre>
+
+      <h3>Success Response (200 OK)</h3>
+      <pre>{
+  "status": "success",
+  "transactionId": "TXN_7849201",
+  "plan": "1.5gb",
+  "amount": "$2.99",
+  "timestamp": "2026-08-26T17:15:00Z",
+  "message": "Recharge completed successfully for plan 1.5gb"
+}</pre>
+
+      <h3>cURL Example</h3>
+      <pre>curl -X POST http://localhost:8080/api/v1/recharge/process \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer mock_jwt_token_123" \
+  -d '{"plan":"2gb","amount":"$3.99","userEmail":"user@cloudvpn.plus"}'</pre>
+    </section>
+  </div>
+</body>
+</html>

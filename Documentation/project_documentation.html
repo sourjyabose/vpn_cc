@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudVPN+ | Master Project Documentation</title>
+  <style>
+    :root {
+      --doc-bg: #faf8f5;
+      --doc-surface: #ffffff;
+      --doc-border: #e7e5e4;
+      --doc-text: #1c1917;
+      --doc-text-muted: #57534e;
+      --doc-brand: #b45309;
+      --doc-brand-dark: #78350f;
+      --doc-brand-light: #fef3c7;
+      --doc-code-bg: #292524;
+      --doc-code-text: #f5f5f4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--doc-bg);
+      color: var(--doc-text);
+      line-height: 1.65;
+      padding: 2.5rem 1.5rem;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background-color: var(--doc-surface);
+      border: 1px solid var(--doc-border);
+      border-radius: 16px;
+      padding: 3rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    header {
+      border-bottom: 2px solid var(--doc-border);
+      padding-bottom: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .badge {
+      display: inline-block;
+      background-color: var(--doc-brand-light);
+      color: var(--doc-brand-dark);
+      border: 1px solid var(--doc-brand);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    h1 { font-size: 2.4rem; color: var(--doc-text); margin-bottom: 0.5rem; }
+    h2 { font-size: 1.6rem; color: var(--doc-brand-dark); margin: 2.5rem 0 1rem 0; border-bottom: 1px solid var(--doc-border); padding-bottom: 0.4rem; }
+    h3 { font-size: 1.25rem; color: var(--doc-text); margin: 1.5rem 0 0.75rem 0; }
+    p, li { font-size: 1rem; color: var(--doc-text-muted); margin-bottom: 1rem; }
+    ul, ol { padding-left: 1.75rem; margin-bottom: 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+    strong { color: var(--doc-text); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border: 1px solid var(--doc-border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+    th {
+      background-color: var(--doc-brand-light);
+      color: var(--doc-brand-dark);
+      font-weight: 700;
+    }
+    tr:nth-child(even) {
+      background-color: #fdfbf7;
+    }
+    pre {
+      background-color: var(--doc-code-bg);
+      color: var(--doc-code-text);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.9rem;
+      margin: 1.25rem 0;
+    }
+    code {
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      background-color: #f5f2eb;
+      color: var(--doc-brand-dark);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .callout {
+      background-color: var(--doc-brand-light);
+      border-left: 4px solid var(--doc-brand);
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+    }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--doc-border);
+    }
+    .nav-link {
+      display: inline-block;
+      background-color: #f5f2eb;
+      color: var(--doc-brand-dark);
+      text-decoration: none;
+      padding: 0.5rem 0.9rem;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border: 1px solid var(--doc-border);
+    }
+    .nav-link:hover {
+      background-color: var(--doc-brand-dark);
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge">Comprehensive Architecture & Design Spec</span>
+      <h1>CloudVPN+ Web Portal — Master Project Documentation</h1>
+      <p>Exhaustive technical documentation detailing project architecture, file hierarchies, design constraints, component interactions, HTTP compatibility considerations, and data flow mechanisms.</p>
+    </header>
+
+    <section>
+      <h2>1. Project Overview & Business Purpose</h2>
+      <p><strong>CloudVPN+</strong> is a modern, high-speed virtual private network and bandwidth management portal designed to provide users with secure, rapid onboarding, credential management, and instant mobile data bandwidth top-ups. The client frontend delivers an extraordinary aesthetic experience using a light-themed <strong>Glassmorphism</strong> UI floating over a high-resolution classical landscape art canvas.</p>
+      
+      <div class="callout">
+        <strong>Strict UI & Environment Constraints:</strong>
+        <ul style="margin-bottom:0; margin-top: 0.5rem;">
+          <li><strong>Light Theme Only:</strong> Crisp frosted glass surface atop warm classical scenery.</li>
+          <li><strong>Color Constraints:</strong> Zero purple, zero blue, zero pink. Warm amber/ochre/charcoal tones are utilized.</li>
+          <li><strong>No Color Gradients:</strong> Solely solid colors and solid translucent alpha levels (`rgba`, `rgb`, `hsl`).</li>
+          <li><strong>50/50 Split Viewport:</strong> Left 50% remains completely clear to showcase the classical artwork, right 50% contains the floating glass card.</li>
+          <li><strong>HTTP Compatibility:</strong> Strictly zero HTTPS-exclusive APIs (No Service Workers, no `crypto.subtle`), standard web features only.</li>
+          <li><strong>Decoupled Backend Architecture:</strong> Zero hardcoded backend dependencies. Clean REST API interfaces ready for user backend attachment.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. Directory & File Structure</h2>
+      <pre>
+glassmorphism_portal/
+│
+├── index.html                       # Entry-point router (redirects to signup.html)
+├── signup.html                      # Glassmorphic user registration page
+├── login.html                       # Glassmorphic user login page (with login_succ() callback)
+├── recharge.html                    # Glassmorphic data recharge page (1gb, 1.5gb, 2gb, 5gb, 10gb)
+│
+├── assets/
+│   └── images/
+│       └── bg.jpg                   # High-resolution classical Mughal miniature painting background
+│
+├── css/
+│   └── style.css                    # Unified light glassmorphic stylesheet & responsive rules
+│
+├── js/
+│   ├── validation.js                # RFC 5322 email regex, password strength & matching validation
+│   ├── api_client.js                # REST API client interface layer with fallback mock simulation
+│   ├── auth.js                      # Signup/login controllers and global window.login_succ() hook
+│   └── recharge.js                  # Recharge plan selection, dynamic pricing, and modal receipt handler
+│
+└── Documentation/
+    ├── project_documentation.html   # Master project architecture & design documentation
+    ├── signup_html.html             # Detailed file documentation for signup.html
+    ├── login_html.html              # Detailed file documentation for login.html
+    ├── recharge_html.html           # Detailed file documentation for recharge.html
+    ├── index_html.html              # Detailed file documentation for index.html
+    ├── style_css.html               # Detailed file documentation for css/style.css
+    ├── validation_js.html           # Detailed file documentation for js/validation.js
+    ├── api_client_js.html           # Detailed file documentation for js/api_client.js
+    ├── auth_js.html                 # Detailed file documentation for js/auth.js
+    ├── recharge_js.html             # Detailed file documentation for js/recharge.js
+    └── rest_api.html                # Exhaustive REST API endpoint & schema specifications
+      </pre>
+    </section>
+
+    <section>
+      <h2>3. System Architecture & Component Interaction</h2>
+      <p>The system is architected in a modular 4-tier client-side design pattern:</p>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Tier / Layer</th>
+            <th>Component Files</th>
+            <th>Core Responsibility</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1. Presentation & Structure Layer</strong></td>
+            <td><code>signup.html</code>, <code>login.html</code>, <code>recharge.html</code></td>
+            <td>Semantic HTML5 markup structured into 50/50 split layout, input fields, labels, accessible error containers, and modals.</td>
+          </tr>
+          <tr>
+            <td><strong>2. Visual Styling & Glass Layer</strong></td>
+            <td><code>css/style.css</code></td>
+            <td>Implements frosted glassmorphic card (<code>backdrop-filter: blur(16px)</code>), solid light palette, zero purple/blue/pink, zero gradients, WCAG AAA text contrast.</td>
+          </tr>
+          <tr>
+            <td><strong>3. Client Validation & Controller Layer</strong></td>
+            <td><code>js/validation.js</code>, <code>js/auth.js</code>, <code>js/recharge.js</code></td>
+            <td>Handles input sanitization, RFC email regex, password matching, DOM feedback rendering, plan selection (1gb to 10gb), and the <code>login_succ()</code> global workflow.</td>
+          </tr>
+          <tr>
+            <td><strong>4. API Abstraction & Session Layer</strong></td>
+            <td><code>js/api_client.js</code></td>
+            <td>HTTP-compatible async API client interfacing with backend endpoints (<code>/auth/signup</code>, <code>/auth/login</code>, <code>/recharge/process</code>), token storage, and offline mock fallback.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Component Interaction Workflow Diagram</h3>
+      <pre>
++-----------------------------------------------------------------------------------+
+|                                 USER VIEWPORT                                     |
+|  [Left 50%: Visible Background Scene]  |  [Right 50%: Floating Glassmorphic Card] |
++----------------------------------------+------------------------------------------+
+                                         |
+                                         v
+                         +-------------------------------+
+                         |   DOM User Input Events       |
+                         +---------------+---------------+
+                                         |
+                                         v
+                         +-------------------------------+
+                         |   FormValidator (Static)      |
+                         |   - validateEmail()           |
+                         |   - validatePassword()        |
+                         |   - validatePasswordMatch()   |
+                         +---------------+---------------+
+                                         | (Valid)
+                                         v
+                         +-------------------------------+
+                         |   Page Controller Layer       |
+                         |   (auth.js / recharge.js)     |
+                         +---------------+---------------+
+                                         |
+                                         v
+                         +-------------------------------+
+                         |   CloudVPNAPIClient Layer     |
+                         |   - request(endpoint, method) |
+                         |   - setSession(token, user)   |
+                         +---------------+---------------+
+                                         |
+                       +-----------------+-----------------+
+                       |                                   |
+                       v (Real Backend Available)          v (Pre-backend / Standalone)
+           +-----------------------+           +-----------------------+
+           | User Custom HTTP API  |           | Client-Side Fallback  |
+           | /api/v1/auth/signup   |           | Mock Simulation       |
+           | /api/v1/auth/login    |           +-----------------------+
+           | /api/v1/recharge/...  |                       |
+           +-----------+-----------+                       |
+                       |                                   |
+                       +-----------------+-----------------+
+                                         |
+                                         v
+                         +-------------------------------+
+                         |   Success Response Trigger    |
+                         |   -> window.login_succ()      |
+                         |   -> Transition / Receipt     |
+                         +-------------------------------+
+      </pre>
+    </section>
+
+    <section>
+      <h2>4. Architectural Decisions & Rationale</h2>
+      
+      <h3>Why Glassmorphism with 50/50 Split?</h3>
+      <p>The background provided by the user is an exquisite, historic Indian miniature painting representing royalty, gardens, and water architecture. Obscuring this visual with full-width solid forms would ruin the aesthetic appeal. By fixing the canvas at 50% left visibility and floating a frosted glass card (<code>rgba(255, 255, 255, 0.82)</code> with <code>backdrop-filter: blur(16px)</code>) on the right, the user experiences a modern digital tool while appreciating the artwork beneath.</p>
+
+      <h3>Why Zero Purple, Blue, Pink, or Gradients?</h3>
+      <p>The user strictly prohibited shades of purple, blue, pink, and any color gradients. To create a prestigious, clean, and regal corporate feel that harmonizes with the background painting, we selected a palette composed of:</p>
+      <ul>
+        <li><strong>Ivory / Porcelain Glass:</strong> <code>rgba(255, 255, 255, 0.82)</code> and <code>rgba(252, 250, 246, 0.72)</code>.</li>
+        <li><strong>Deep Warm Charcoal / Black Text:</strong> <code>#1c1917</code> and <code>#44403c</code> for ultra-crisp readability.</li>
+        <li><strong>Warm Amber / Earthy Gold:</strong> <code>#b45309</code>, <code>#92400e</code>, and <code>#78350f</code> for primary brand accents and interactive states.</li>
+        <li><strong>Dark Brick Red & Forest Green:</strong> <code>#991b1b</code> and <code>#166534</code> for high-contrast, non-pink/non-purple validation feedback.</li>
+      </ul>
+
+      <h3>Why HTTP Compatibility Only?</h3>
+      <p>When hosting over unencrypted HTTP (port 80 or local network), modern web browsers disable features marked as "Powerful Features requiring Secure Context" (e.g. Service Workers, <code>window.crypto.subtle</code>, Web Bluetooth, Web MIDI). All CloudVPN+ code utilizes standard ECMAScript 6+ vanilla DOM APIs, <code>localStorage</code>, <code>sessionStorage</code>, and standard <code>fetch</code> calls with JSON payloads, ensuring 100% crash-free execution over standard HTTP.</p>
+
+      <h3>How <code>login_succ()</code> Operates</h3>
+      <p>As requested, when successful authentication occurs (or when the developer executes <code>login_succ()</code> programmatically or via testing buttons), the global function updates the user's local session cache, renders an active feedback banner in the glassmorphic card, and smoothly transitions to <code>recharge.html</code>.</p>
+    </section>
+
+    <section>
+      <h2>5. Documentation Index</h2>
+      <p>Explore detailed per-file specifications and API documentation:</p>
+      <div class="nav-links">
+        <a href="signup_html.html" class="nav-link">signup_html.html</a>
+        <a href="login_html.html" class="nav-link">login_html.html</a>
+        <a href="recharge_html.html" class="nav-link">recharge_html.html</a>
+        <a href="index_html.html" class="nav-link">index_html.html</a>
+        <a href="style_css.html" class="nav-link">style_css.html</a>
+        <a href="validation_js.html" class="nav-link">validation_js.html</a>
+        <a href="api_client_js.html" class="nav-link">api_client_js.html</a>
+        <a href="auth_js.html" class="nav-link">auth_js.html</a>
+        <a href="recharge_js.html" class="nav-link">recharge_js.html</a>
+        <a href="rest_api.html" class="nav-link">rest_api.html</a>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

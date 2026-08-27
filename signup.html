@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudVPN+ | Sign Up</title>
+  <!-- Pure standard HTTP compatible stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="scene-viewport">
+    <div class="split-layout">
+      
+      <!-- Left Half: Completely Visible Artwork Showcase -->
+      <section class="left-scene-panel" aria-label="Visual Brand Scene">
+        <div class="left-brand-watermark">
+          <div class="left-brand-icon"></div>
+          <span class="left-brand-text">CloudVPN+</span>
+        </div>
+        <div class="left-scene-footer">
+          <span class="left-scene-badge">High-Speed Encrypted Network</span>
+        </div>
+      </section>
+
+      <!-- Right Half: Floating Glassmorphic Signup Container -->
+      <section class="right-glass-panel" aria-label="Signup Form Panel">
+        <div class="glass-card">
+          
+          <header class="card-header">
+            
+            <h1 class="card-title">Create Account</h1>
+            <p class="card-subtitle">Connect instantly to global ultra-fast tunnels</p>
+          </header>
+
+          <!-- Alert Notification Banner -->
+          <div id="alertBanner" class="alert-banner hidden" role="alert"></div>
+
+          <form id="signupForm" class="auth-form" novalidate>
+            
+            <!-- Email Field -->
+            <div class="form-group">
+              <label for="signupEmail" class="form-label">
+                <span>Email Address</span>
+              </label>
+              <div class="input-wrapper">
+                <input 
+                  type="email" 
+                  id="signupEmail" 
+                  class="form-input" 
+                  placeholder="name@example.com" 
+                  autocomplete="email" 
+                  required
+                >
+              </div>
+              <div id="signupEmailFeedback" class="field-feedback empty" aria-live="polite"></div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+              <label for="signupPassword" class="form-label">
+                <span>Password</span>
+                <span class="form-label-optional">Min. 8 chars, letters & numbers</span>
+              </label>
+              <div class="input-wrapper">
+                <input 
+                  type="password" 
+                  id="signupPassword" 
+                  class="form-input" 
+                  placeholder="Enter strong password" 
+                  autocomplete="new-password" 
+                  required
+                >
+                <button type="button" class="input-action-btn toggle-password-btn" data-target="signupPassword">Show</button>
+              </div>
+              <div id="signupPasswordFeedback" class="field-feedback empty" aria-live="polite"></div>
+            </div>
+
+            <!-- Re-enter Password Field -->
+            <div class="form-group">
+              <label for="signupReenterPassword" class="form-label">
+                <span>Re-enter Password</span>
+              </label>
+              <div class="input-wrapper">
+                <input 
+                  type="password" 
+                  id="signupReenterPassword" 
+                  class="form-input" 
+                  placeholder="Confirm your password" 
+                  autocomplete="new-password" 
+                  required
+                >
+                <button type="button" class="input-action-btn toggle-password-btn" data-target="signupReenterPassword">Show</button>
+              </div>
+              <div id="signupReenterPasswordFeedback" class="field-feedback empty" aria-live="polite"></div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="signupSubmitBtn" class="btn-primary">
+              Create CloudVPN+ Account
+            </button>
+          </form>
+
+          <footer class="card-footer">
+            <p class="footer-text">
+              Already have an account? 
+              <a href="login.html" class="footer-link">Sign In</a>
+            </p>
+          </footer>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Client-side HTTP compatible scripts -->
+  <script src="js/validation.js"></script>
+  <script src="js/api_client.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

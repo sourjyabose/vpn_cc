@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudVPN+ | Documentation: recharge.html</title>
+  <style>
+    :root {
+      --doc-bg: #faf8f5;
+      --doc-surface: #ffffff;
+      --doc-border: #e7e5e4;
+      --doc-text: #1c1917;
+      --doc-text-muted: #57534e;
+      --doc-brand: #b45309;
+      --doc-brand-dark: #78350f;
+      --doc-brand-light: #fef3c7;
+      --doc-code-bg: #292524;
+      --doc-code-text: #f5f5f4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--doc-bg);
+      color: var(--doc-text);
+      line-height: 1.65;
+      padding: 2.5rem 1.5rem;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background-color: var(--doc-surface);
+      border: 1px solid var(--doc-border);
+      border-radius: 16px;
+      padding: 3rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    header {
+      border-bottom: 2px solid var(--doc-border);
+      padding-bottom: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .badge {
+      display: inline-block;
+      background-color: var(--doc-brand-light);
+      color: var(--doc-brand-dark);
+      border: 1px solid var(--doc-brand);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    h1 { font-size: 2.2rem; color: var(--doc-text); margin-bottom: 0.5rem; }
+    h2 { font-size: 1.5rem; color: var(--doc-brand-dark); margin: 2.5rem 0 1rem 0; border-bottom: 1px solid var(--doc-border); padding-bottom: 0.4rem; }
+    h3 { font-size: 1.2rem; color: var(--doc-text); margin: 1.5rem 0 0.75rem 0; }
+    p, li { font-size: 1rem; color: var(--doc-text-muted); margin-bottom: 1rem; }
+    ul, ol { padding-left: 1.75rem; margin-bottom: 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+    strong { color: var(--doc-text); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border: 1px solid var(--doc-border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+    th {
+      background-color: var(--doc-brand-light);
+      color: var(--doc-brand-dark);
+      font-weight: 700;
+    }
+    tr:nth-child(even) { background-color: #fdfbf7; }
+    pre {
+      background-color: var(--doc-code-bg);
+      color: var(--doc-code-text);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.9rem;
+      margin: 1.25rem 0;
+    }
+    code {
+      font-family: Consolas, Monaco, monospace;
+      background-color: #f5f2eb;
+      color: var(--doc-brand-dark);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: var(--doc-brand);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .back-btn:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="project_documentation.html" class="back-btn">← Back to Master Documentation</a>
+    
+    <header>
+      <span class="badge">File Specification</span>
+      <h1>File Documentation: recharge_html.html</h1>
+      <p>Target File: <code>recharge.html</code> | Type: HTML5 Document</p>
+    </header>
+
+    <!-- PART 1 -->
+    <section>
+      <h2>First: Purpose, Necessity & Project Fit</h2>
+      <p><strong>Why this file is necessary:</strong> <code>recharge.html</code> is the operational hub of the CloudVPN+ application. It allows authenticated users to top up high-speed VPN data quota by choosing from predefined bandwidth tiers (<code>1gb</code>, <code>1.5gb</code>, <code>2gb</code>, <code>5gb</code>, and <code>10gb</code>). It provides live pricing calculation and receipt confirmation.</p>
+      
+      <p><strong>How it fits into the project:</strong> It is the primary target destination following successful login (triggered by <code>login_succ()</code>). It represents the core transaction interface of the service.</p>
+
+      <p><strong>How it interacts with the project:</strong></p>
+      <ul>
+        <li><strong>Styling Interaction:</strong> Linked to <code>css/style.css</code> for 50/50 split layout, frosted glass card, custom select dropdown styling, and modal overlay.</li>
+        <li><strong>Session Interaction:</strong> Reads user session state from <code>CloudVPNAPI.getCurrentUser()</code> to display the active member's account.</li>
+        <li><strong>Controller Interaction:</strong> Driven by <code>js/recharge.js</code> which computes plan breakdowns and handles the receipt modal.</li>
+        <li><strong>API Interaction:</strong> Interacts with <code>js/api_client.js</code> via <code>CloudVPNAPI.processRecharge()</code>.</li>
+      </ul>
+    </section>
+
+    <!-- PART 2 -->
+    <section>
+      <h2>Second: Project Structure, Architecture & Design Rationale</h2>
+      <p><strong>Architecture & Design Rationale:</strong> Maintains visual parity with <code>signup.html</code> and <code>login.html</code> by keeping the left 50% clear for the classical painting and floating a glassmorphic card on the right 50%.</p>
+      
+      <p><strong>Required Dropdown Specifications:</strong> The dropdown includes the exact required options:</p>
+      <ul>
+        <li><code>1gb</code> (Express Pass — $1.99, 24 Hours)</li>
+        <li><code>1.5gb</code> (Plus Pass — $2.99, 48 Hours)</li>
+        <li><code>2gb</code> (Weekly Boost — $3.99, 7 Days)</li>
+        <li><code>5gb</code> (Ultra Shield — $7.99, 30 Days)</li>
+        <li><code>10gb</code> (Enterprise Max — $12.99, 60 Days)</li>
+      </ul>
+
+      <p><strong>Light Theme & Color Compliance:</strong> Completely free of purple, blue, and pink. Features warm solid amber/gold accents (<code>#b45309</code>) and high-contrast charcoal text.</p>
+    </section>
+
+    <!-- PART 3 -->
+    <section>
+      <h2>Third: Exhaustive Element, Component & Dependency Documentation</h2>
+
+      <h3>Imported Dependencies</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Imported Resource</th>
+            <th>Source File</th>
+            <th>Reason & Interaction Mechanism</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>css/style.css</code></td>
+            <td><code>css/style.css</code></td>
+            <td>Imported via <code>&lt;link rel="stylesheet"&gt;</code> to apply glassmorphic cards, plan breakdown cards, and modal dialog styles.</td>
+          </tr>
+          <tr>
+            <td><code>js/api_client.js</code></td>
+            <td><code>js/api_client.js</code></td>
+            <td>Imported via <code>&lt;script&gt;</code> to access session storage and post recharge transaction data to the backend.</td>
+          </tr>
+          <tr>
+            <td><code>js/recharge.js</code></td>
+            <td><code>js/recharge.js</code></td>
+            <td>Imported via <code>&lt;script&gt;</code> to manage dropdown changes, calculate price, and trigger receipt modal.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Key DOM Elements & Member Specifications</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Element ID / Class</th>
+            <th>HTML Element</th>
+            <th>Data Type / Attribute</th>
+            <th>Description, Purpose & Interaction</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>#planSelect</code></td>
+            <td><code>&lt;select&gt;</code></td>
+            <td><code>HTMLSelectElement (string)</code></td>
+            <td>Dropdown containing <code>1gb</code>, <code>1.5gb</code>, <code>2gb</code>, <code>5gb</code>, and <code>10gb</code>. Listens for <code>change</code> event.</td>
+          </tr>
+          <tr>
+            <td><code>#planAmount</code></td>
+            <td><code>&lt;span&gt;</code></td>
+            <td><code>HTMLElement (string)</code></td>
+            <td>Displays the computed price corresponding to the selected data tier.</td>
+          </tr>
+          <tr>
+            <td><code>#planValidity</code></td>
+            <td><code>&lt;span&gt;</code></td>
+            <td><code>HTMLElement (string)</code></td>
+            <td>Displays the validity period (e.g. 24 Hours, 7 Days, 30 Days).</td>
+          </tr>
+          <tr>
+            <td><code>#planSpeed</code></td>
+            <td><code>&lt;span&gt;</code></td>
+            <td><code>HTMLElement (string)</code></td>
+            <td>Displays the speed allocation for the selected plan.</td>
+          </tr>
+          <tr>
+            <td><code>#userEmailDisplay</code></td>
+            <td><code>&lt;strong&gt;</code></td>
+            <td><code>HTMLElement (string)</code></td>
+            <td>Displays current logged in user's email address.</td>
+          </tr>
+          <tr>
+            <td><code>#logoutBtn</code></td>
+            <td><code>&lt;button&gt;</code></td>
+            <td><code>HTMLButtonElement</code></td>
+            <td>Clears session storage via <code>CloudVPNAPI.clearSession()</code> and returns to <code>login.html</code>.</td>
+          </tr>
+          <tr>
+            <td><code>#rechargeModal</code></td>
+            <td><code>&lt;div&gt;</code></td>
+            <td><code>HTMLElement (dialog)</code></td>
+            <td>Vanilla HTTP-compatible confirmation dialog displaying receipt, transaction ID, and plan details.</td>
+          </tr>
+          <tr>
+            <td><code>#modalCloseBtn</code></td>
+            <td><code>&lt;button&gt;</code></td>
+            <td><code>HTMLButtonElement</code></td>
+            <td>Dismisses the recharge receipt modal.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudVPN+ | Sign In</title>
+  <!-- Pure standard HTTP compatible stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="scene-viewport">
+    <div class="split-layout">
+      
+      <!-- Left Half: Completely Visible Artwork Showcase -->
+      <section class="left-scene-panel" aria-label="Visual Brand Scene">
+        <div class="left-brand-watermark">
+          <div class="left-brand-icon">+</div>
+          <span class="left-brand-text">CloudVPN+</span>
+        </div>
+        <div class="left-scene-footer">
+          <span class="left-scene-badge">Secure Tunnel Gateway</span>
+        </div>
+      </section>
+
+      <!-- Right Half: Floating Glassmorphic Login Container -->
+      <section class="right-glass-panel" aria-label="Login Form Panel">
+        <div class="glass-card">
+          
+          <header class="card-header">
+            <div class="brand-badge">
+              <span class="brand-badge-icon"></span>
+              <span>CloudVPN+ Gateway</span>
+            </div>
+            <h1 class="card-title">Welcome Back</h1>
+            <p class="card-subtitle">Enter your credentials to access your secure network</p>
+          </header>
+
+          <!-- Alert Notification Banner -->
+          <div id="alertBanner" class="alert-banner hidden" role="alert"></div>
+
+          <form id="loginForm" class="auth-form" novalidate>
+            
+            <!-- Email Field -->
+            <div class="form-group">
+              <label for="loginEmail" class="form-label">
+                <span>Email Address</span>
+              </label>
+              <div class="input-wrapper">
+                <input 
+                  type="email" 
+                  id="loginEmail" 
+                  class="form-input" 
+                  placeholder="name@example.com" 
+                  autocomplete="email" 
+                  required
+                >
+              </div>
+              <div id="loginEmailFeedback" class="field-feedback empty" aria-live="polite"></div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+              <label for="loginPassword" class="form-label">
+                <span>Password</span>
+              </label>
+              <div class="input-wrapper">
+                <input 
+                  type="password" 
+                  id="loginPassword" 
+                  class="form-input" 
+                  placeholder="Enter your password" 
+                  autocomplete="current-password" 
+                  required
+                >
+                <button type="button" class="input-action-btn toggle-password-btn" data-target="loginPassword">Show</button>
+              </div>
+              <div id="loginPasswordFeedback" class="field-feedback empty" aria-live="polite"></div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="loginSubmitBtn" class="btn-primary">
+              Sign In to CloudVPN+
+            </button>
+
+            <!-- Quick Testing Action for login_succ() Hook -->
+            <button type="button" class="btn-secondary" onclick="window.login_succ({ user: { email: 'demo@cloudvpn.plus' } })">
+              ⚡ Trigger login_succ() Demo
+            </button>
+          </form>
+
+          <footer class="card-footer">
+            <p class="footer-text">
+              Don't have an account? 
+              <a href="signup.html" class="footer-link">Sign Up</a>
+            </p>
+          </footer>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Client-side HTTP compatible scripts -->
+  <script src="js/validation.js"></script>
+  <script src="js/api_client.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>
