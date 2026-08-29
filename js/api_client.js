@@ -98,19 +98,18 @@ class CloudVPNAPIClient {
       config.body = JSON.stringify(body);
     }
 
-    try {
+    
       const response = await fetch(this.baseUrl + endpoint, config);
       const data = await response.json().catch(() => ({}));
       
       if (!response.ok) {
         throw new Error(data.message || 'HTTP request failed with status ' + response.status);
       }
+      if(data.status!="success"){
+        throw new Error(data.message || 'HTTP request failed with status ' + response.status);
+      }
       return data;
-    } catch (err) {
-      // Fallback simulation when custom backend is not yet active
-      console.warn('[CloudVPN+ API] Real endpoint unavailable (' + err.message + '). Executing frontend simulation fallback.');
-      return this._mockFallback(endpoint, method, body);
-    }
+    
   }
 
   /**
@@ -193,4 +192,4 @@ class CloudVPNAPIClient {
 }
 
 // Global instance creation for cross-file accessibility
-window.CloudVPNAPI = new CloudVPNAPIClient();
+window.CloudVPNAPI = new CloudVPNAPIClient("http://127.0.0.1:8338");

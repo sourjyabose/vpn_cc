@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Defined CloudVPN+ High-Speed Data Packs
   const PLAN_DATA = {
-    '1gb': {
+    '1': {
       name: '1 GB Express Tunnel',
       data: '1 GB',
       price: '$1.99',
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
       validity: '24 Hours',
       speed: 'Up to 300 Mbps'
     },
-    '1.5gb': {
+    '1.5': {
       name: '1.5 GB Plus Pass',
       data: '1.5 GB',
       price: '$2.99',
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
       validity: '48 Hours',
       speed: 'Up to 500 Mbps'
     },
-    '2gb': {
+    '2': {
       name: '2 GB Weekly Boost',
       data: '2 GB',
       price: '$3.99',
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
       validity: '7 Days',
       speed: 'Up to 1 Gbps'
     },
-    '5gb': {
+    '5': {
       name: '5 GB Ultra Shield',
       data: '5 GB',
       price: '$7.99',
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
       validity: '30 Days',
       speed: 'Uncapped Premium'
     },
-    '10gb': {
+    '10': {
       name: '10 GB Enterprise Max',
       data: '10 GB',
       price: '$12.99',
@@ -73,10 +73,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Update plan details card upon selection
   function updatePlanCard(planKey) {
-    const plan = PLAN_DATA[planKey] || PLAN_DATA['1gb'];
-    if (planAmountDisplay) planAmountDisplay.textContent = plan.price;
-    if (planValidityDisplay) planValidityDisplay.textContent = plan.validity;
-    if (planSpeedDisplay) planSpeedDisplay.textContent = plan.speed;
+
+    const plan = PLAN_DATA[planKey] || PLAN_DATA['1'];
+    cr=new URLSearchParams(window.location.search).get("cr")
+    if(cr==null){
+      cr=0;
+    }
+    if (planAmountDisplay) planAmountDisplay.textContent = cr+" GB";
+    if (planValidityDisplay) planValidityDisplay.textContent = (parseInt(planKey,10))+" GB";
+    total=parseInt(cr,10)+parseInt(planKey,10);
+    if (planSpeedDisplay) planSpeedDisplay.textContent = total+" GB";;
   }
 
   if (planSelect) {
@@ -84,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
       updatePlanCard(e.target.value);
     });
     // Initialize with default selected plan
-    updatePlanCard(planSelect.value || '1gb');
+    updatePlanCard(planSelect.value || '1');
   }
 
   // Handle Recharge Submission
