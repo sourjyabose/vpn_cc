@@ -3,7 +3,7 @@
  * Manages plan selection dropdown (1gb, 1.5gb, 2gb, 5gb, 10gb),
  * dynamic price calculation, user status display, and recharge transactions.
  */
-
+var total=0;
 document.addEventListener('DOMContentLoaded', () => {
   const rechargeForm = document.getElementById('rechargeForm');
   const planSelect = document.getElementById('planSelect');
@@ -23,6 +23,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Defined CloudVPN+ High-Speed Data Packs
   const PLAN_DATA = {
+    '0.05': {
+      name: '50 Mb Starter Plan',
+      data: '50 Mb',
+      price: '$1.99',
+      numericPrice: 1.99,
+      validity: '24 Hours',
+      speed: 'Up to 300 Mbps'
+    },
     '1': {
       name: '1 GB Express Tunnel',
       data: '1 GB',
@@ -113,10 +121,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Populate Modal Receipt
-        if (modalTxnId) modalTxnId.textContent = response.transactionId || ('TXN_' + Math.floor(Math.random() * 899999 + 100000));
+        if (modalTxnId) modalTxnId.textContent = ('TXN_' + Math.floor(Math.random() * 899999 + 100000));
         if (modalPlan) modalPlan.textContent = plan.name + ' (' + plan.data + ')';
-        if (modalAmount) modalAmount.textContent = plan.price;
-
+        if (modalAmount) modalAmount.textContent = total+" GB";
+        console.log(total)
         if (rechargeModal) {
           rechargeModal.classList.remove('hidden');
         }
