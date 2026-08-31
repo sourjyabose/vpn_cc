@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from fastapi import FastAPI,Request,Response,Cookie
+from fastapi import FastAPI,Request,Response,Cookie,WebSocket
 from fastapi.responses import FileResponse,RedirectResponse
 from typing import Annotated
 import pickle
@@ -10,10 +10,13 @@ try:
 except Exception as e:
     db={}
     db["users"]={}
+    db["servers"]={}
+    db["admins"]={}
+    db["admins"]["root"]={"password":"root"}
     pickle.dump(db,open("DB.dsk","wb"))
 
-def verifynonce(email,field,value):
-    htoken=hashlib.sha256((db["users"][email][field]+str(db["users"][email]["nonce"])).encode("utf-8")).hexdigest();
+def verifynonce(email,field,value,role="users"):
+    htoken=hashlib.sha256((db[role][email][field]+str(db["users"][email]["nonce"])).encode("utf-8")).hexdigest();
     if value==htoken:
         return True;
     else:
@@ -32,13 +35,62 @@ def adduser(email,password,recharge):
                         "bytesusedsofar":0}
     savetodisk();
 
-
-
+send=0;
+receive=0
+smsg={}
+rmsg={}
+routingservers=0
 
 server=FastAPI()
 
-@server.post("/reporting/{email}/{passwd}/{data}")
-async def reporting("")
+@server.websocket("/ws")
+async def cctorouting(websocket:WebSocket):
+    global send,receive,smsg,rmsg,routingservers
+    await websocket.accept()
+    routingservers+=1
+    done=0;
+    while True:
+        if send==0 and receive==0:
+            done=0
+        if send>0 and done==0:
+            await websocket.send_json(smsg)
+            send-=1
+            done=1
+            if send==0:
+                smsg={}
+        if receive>0 and done==0:
+            rmsg=await websocket.receive_json()
+            receive-=1
+            done=1
+            if receive==0:
+                rmsg={}
+
+        
+@server.get("/adminPanel/register/{email}/{passwd}/{servername}/{serverkey}")
+async def registerServer(email,passwd,servername,serverkey):
+    if verifynonce(email,"password",passwd):
+        db["servers"]["servername"]={"serverkey":serverkey}
+        return {"status":"success"}
+
+
+
+
+
+@server.get("/reporting/dataUsage/{email}/{passwd}/{data}")
+async def reporting(email,passwd,data):
+    if verifynonce(email,"password",passwd):
+        if data=="8799007739":
+            db["users"][email]["recharge"]=0;
+            db["users"][email]["bytesusedsofar"]=0;
+            savetodisk()
+            return "OK"
+        db["users"][email]["bytesusedsofar"]+=float(data)
+        savetodisk()
+        if db["users"][email]["bytesusedsofar"]>(db["users"][email]["recharge"]*1000*1000*1000):
+            db["users"][email]["recharge"]=0;
+            db["users"][email]["bytesusedsofar"]=0;
+            savetodisk()
+        return "OK"
 
 @server.get("/changedevice/{email}/{passwd}/{deviceId}")
 async def changedevice(email,passwd,deviceId):
@@ -55,13 +107,21 @@ async def appauth(email,passwd,deviceId):
             db["users"][email]["device_id"]=deviceId;
             return {"status":"success",
                     "data":{"email":email,
-                        "quota":db["users"][email]["recharge"]}}
+                        "quota":db["users"][email]["recharge"],
+                        "bytesusedsofar":db["users"][email]["bytesusedsofar"]
+
+                        },
+                        }
+
+        
         elif deviceId!=db["users"][email]["device_id"] and db["users"][email]["device_id"]!="default":
             return {"status":"ADR"}
         elif deviceId==db["users"][email]["device_id"]:
             return {"status":"success",
                                 "data":{"email":email,
-                                    "quota":db["users"][email]["recharge"]}}
+                                    "quota":db["users"][email]["recharge"],
+                                    "bytesusedsofar":db["users"][email]["bytesusedsofar"]
+                                    }}
     else:
         return {"status":"AuthFail"}
     
@@ -116,9 +176,10 @@ def signup(signup:suuserdata):
 def login(signup:suuserdata,response:Response):
     try:
         if((db["users"][signup.email]["password"])!=signup.password):
+           
            raise Exception("Invalid Auth") 
         token=hashlib.sha256((db["users"][signup.email]["password"]).encode('utf-8')).hexdigest()
-        response.set_cookie(key="cr",value=db["users"][signup.email]["recharge"]);
+        response.set_cookie(key="cr",value=( round((( (db["users"][signup.email]["recharge"]*1000*1000*1000)-db["users"][signup.email]["bytesusedsofar"])/(1000*1000*1000) ),2)));
         return {
         "status": "success",
         "message": "Logged In",
@@ -130,6 +191,7 @@ def login(signup:suuserdata,response:Response):
         }
         }
     except Exception as e:
+        print(e)
         return {
   "status": "error",
   "message": "Invalid email or password."
@@ -142,7 +204,7 @@ async def recharge(request:Request):
     req=await request.json()
     token=hashlib.sha256((db["users"][req["userEmail"]]["password"]).encode('utf-8')).hexdigest()
     if htoken==token:
-        db["users"][req["userEmail"]]["recharge"]+=int(req["plan"]);
+        db["users"][req["userEmail"]]["recharge"]+=float(req["plan"]);
         savetodisk()
         return {
   "status": "success",

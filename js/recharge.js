@@ -88,9 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
       cr=0;
     }
     if (planAmountDisplay) planAmountDisplay.textContent = cr+" GB";
-    if (planValidityDisplay) planValidityDisplay.textContent = (parseInt(planKey,10))+" GB";
-    total=parseInt(cr,10)+parseInt(planKey,10);
-    if (planSpeedDisplay) planSpeedDisplay.textContent = total+" GB";;
+    if (planValidityDisplay) planValidityDisplay.textContent = (parseFloat(planKey).toFixed(2))+" GB";
+    total=parseFloat(cr)+parseFloat(planKey);
+    if (planSpeedDisplay) planSpeedDisplay.textContent = total.toFixed(2)+" GB";;
   }
 
   if (planSelect) {
@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Populate Modal Receipt
         if (modalTxnId) modalTxnId.textContent = ('TXN_' + Math.floor(Math.random() * 899999 + 100000));
         if (modalPlan) modalPlan.textContent = plan.name + ' (' + plan.data + ')';
-        if (modalAmount) modalAmount.textContent = total+" GB";
+        if (modalAmount) modalAmount.textContent = total.toFixed(2)+" GB";
         console.log(total)
         if (rechargeModal) {
           rechargeModal.classList.remove('hidden');
