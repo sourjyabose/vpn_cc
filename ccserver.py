@@ -4,6 +4,7 @@ from fastapi.responses import FileResponse,RedirectResponse
 from typing import Annotated
 import pickle
 import hashlib
+import asyncio
 
 try: 
     db=pickle.load(open("DB.dsk","rb"))
@@ -11,14 +12,23 @@ except Exception as e:
     db={}
     db["users"]={}
     db["servers"]={}
+    db["servers"]["serveriplist"]=[]
+    db["servers"]["serverportlist"]=[]
     db["admins"]={}
     db["admins"]["root"]={"password":"root"}
+
     pickle.dump(db,open("DB.dsk","wb"))
 
 def verifynonce(email,field,value,role="users"):
-    htoken=hashlib.sha256((db[role][email][field]+str(db["users"][email]["nonce"])).encode("utf-8")).hexdigest();
+    htoken=hashlib.sha256((db[role][email][field]+str(db[role][email]["nonce"])).encode("utf-8")).hexdigest();
     if value==htoken:
-        return True;
+        if role=="users":
+            if db[role][email]["blocked"]==0:
+                return True;
+            else:
+                return False;
+        else:
+            return True;
     else:
         return False;
 
@@ -38,7 +48,7 @@ def adduser(email,password,recharge):
 send=0;
 receive=0
 smsg={}
-rmsg={}
+rmsg=[]
 routingservers=0
 
 server=FastAPI()
@@ -50,6 +60,7 @@ async def cctorouting(websocket:WebSocket):
     routingservers+=1
     done=0;
     while True:
+        await asyncio.sleep(1)
         if send==0 and receive==0:
             done=0
         if send>0 and done==0:
@@ -59,18 +70,77 @@ async def cctorouting(websocket:WebSocket):
             if send==0:
                 smsg={}
         if receive>0 and done==0:
-            rmsg=await websocket.receive_json()
+            try: 
+                rmsg.append(await asyncio.wait_for(websocket.receive_json(),timeout=10))
+            except Exception as e:
+                pass
             receive-=1
             done=1
             if receive==0:
-                rmsg={}
+                rmsg=[]
 
+
+def sendToWebsocket(msg):
+    global smsg,send,routingservers
+    smsg=msg
+    send=routingservers
         
 @server.get("/adminPanel/register/{email}/{passwd}/{servername}/{serverkey}")
 async def registerServer(email,passwd,servername,serverkey):
-    if verifynonce(email,"password",passwd):
-        db["servers"]["servername"]={"serverkey":serverkey}
+    if verifynonce(email,"password",passwd,role="admins"):
+        db["servers"][servername]={}
+        db["servers"][servername]["serverkey"]=serverkey
+        savetodisk()
         return {"status":"success"}
+    else:
+        return {"status":"error",
+                "message":"Auth Error"}
+
+@server.get("/selfRegister/{servername}/{serverkey}/{ip}/{port}")
+async def selfReg(servername,serverkey,ip,port):
+    if db["servers"][servername]["serverkey"]==serverkey:
+        ind=len(db["servers"]["serveriplist"])
+        db["servers"]["serveriplist"][ind]=ip
+        db["servers"]["serverportlist"][ind]=int(port)
+        savetodisk()
+        return {"status":"success"}
+
+
+@server.get("/adminPanel/blockUser/{email}/{passwd}/{userEmail}")
+async def blockUser(email,passwd,userEmail):
+    if verifynonce(email,"password",passwd,role="admins"):
+            db["users"][userEmail]["blocked"]=1;
+            sendToWebsocket({"action":"blockUser",
+                             "email":email});
+            savetodisk()
+            return {"status":"success"}
+    else:
+        return {"status":"error",
+                "message":"Auth Error"}
+
+@server.get("/adminPanel/deleteUser/{email}/{passwd}/{userEmail}")
+async def deleteUser(email,passwd,userEmail):
+    if verifynonce(email,"password",passwd,role="admins"):
+            del db["users"][userEmail]
+            savetodisk()
+            return {"status":"success"}
+    else:
+        return {"status":"error",
+                "message":"Auth Error"}
+
+@server.get("/query/{email}/{passwd}")
+async def queryRoutingServers(email,passwd):
+    if verifynonce(email,"password",passwd):
+        return {"status":"success",
+                "iplist":db["servers"]["serveriplist"],
+                "portlist":db["servers"]["serverportlist"]}
+    else:
+        return {"status":"error",
+                "message":"Auth Failed"}
+
+@server.get("/adminPanel/query/{email}/{passwd}")
+async def adminenquiry():
+    pass
 
 
 
