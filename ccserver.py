@@ -5,6 +5,10 @@ from typing import Annotated
 import pickle
 import hashlib
 import asyncio
+import copy
+
+
+sessionStorage={}
 
 try: 
     db=pickle.load(open("DB.dsk","rb"))
@@ -12,10 +16,12 @@ except Exception as e:
     db={}
     db["users"]={}
     db["servers"]={}
+    db["servers"]["servernamelist"]=[]
     db["servers"]["serveriplist"]=[]
     db["servers"]["serverportlist"]=[]
     db["admins"]={}
-    db["admins"]["root"]={"password":"root"}
+    db["admins"]["root"]={"password":"root",
+                          "nonce":0}
 
     pickle.dump(db,open("DB.dsk","wb"))
 
@@ -96,12 +102,36 @@ async def registerServer(email,passwd,servername,serverkey):
         return {"status":"error",
                 "message":"Auth Error"}
 
+
+
+@server.get("/adminPanel/removeServer/{email}/{passwd}/{servername}")
+async def rmServer(email,passwd,servername):
+    if verifynonce(email,"password",passwd,role="admins"):
+        try:    
+            del db["servers"][servername]
+            ind=db["servers"]["servernamelist"].index(servername)
+            del db["servers"]["serveriplist"][ind]
+            del db["servers"]["serverportlist"][ind]
+            del db["servers"]["servernamelist"][ind]
+            savetodisk()
+            return {"status":"success"}
+        except Exception as e:
+            return {"status":"error",
+                    "message":"Server not found"}
+    else:
+        return {"status":"error",
+                "message":"Auth Error"}
+
+
+
+
 @server.get("/selfRegister/{servername}/{serverkey}/{ip}/{port}")
 async def selfReg(servername,serverkey,ip,port):
     if db["servers"][servername]["serverkey"]==serverkey:
-        ind=len(db["servers"]["serveriplist"])
-        db["servers"]["serveriplist"][ind]=ip
-        db["servers"]["serverportlist"][ind]=int(port)
+        db["servers"]["servernamelist"].append(servername)
+        db["servers"]["serveriplist"].append(ip)
+        db["servers"]["serverportlist"].append(port)
+        
         savetodisk()
         return {"status":"success"}
 
@@ -132,15 +162,69 @@ async def deleteUser(email,passwd,userEmail):
 async def queryRoutingServers(email,passwd):
     if verifynonce(email,"password",passwd):
         return {"status":"success",
+                "servernamelist":db["servers"]["servernamelist"],
                 "iplist":db["servers"]["serveriplist"],
                 "portlist":db["servers"]["serverportlist"]}
     else:
         return {"status":"error",
                 "message":"Auth Failed"}
 
-@server.get("/adminPanel/query/{email}/{passwd}")
-async def adminenquiry():
-    pass
+@server.get("/adminPanel/query/{email}/{passwd}/{userEmail}")
+async def adminenquiry(email,passwd,userEmail):
+    if verifynonce(email,"password",passwd,role="admins"):
+        try:
+            data=copy.deepcopy(db["users"][userEmail])
+            del db["users"][userEmail]["password"]
+            return {"status":"success",
+                    "data":data}
+        except Exception as e:
+            return {"status":"error",
+                    "message":"User Not Found"}
+    else:
+        return {"status":"error",
+                "message":"Auth Fail"}
+
+@server.get("/adminPanel/changeUserEmail/{email}/{passwd}/{userEmail}/{newUserEmail}")
+async def changeUserEmail(email,passwd,userEmail,newUserEmail):
+    if verifynonce(email,"password",passwd,role="admins"):
+        try:
+            data=copy.deepcopy(db["users"][userEmail])
+            del db["users"][userEmail]
+            db["users"][newUserEmail]=data;
+            savetodisk()
+            return {"status":"success"}
+        except Exception as e:
+            return {"status":"error",
+                    "message":"User Not Found"}
+    else:
+        return {"status":"error",
+                "message":"Auth Fail"}
+
+@server.get("/adminPanel/listusers/{email}/{passwd}/{startingRange}/{endingRange}")
+async def listusers(email,passwd,startingRange,endingRange):
+    if verifynonce(email,"password",passwd,role="admins"):
+        data={}
+        for uemail,details in list(db["users"].items())[int(startingRange):int(endingRange)]:
+            data[uemail]=copy.deepcopy(details)
+            del data[uemail]["password"]
+        return {"status":"success",
+                "data":data}
+        
+    else:
+        return {"status":"error",
+                "message":"Auth Fail"}
+
+
+
+@server.get("/adminPanel/nonce")
+async def getnonce(request:Request):
+    req=await request.json()
+    db["admins"][req["UEmail"]]["nonce"]+=1
+    return {"nonce":db["admins"][req["UEmail"]]["nonce"]}
+
+
+
+    
 
 
 
