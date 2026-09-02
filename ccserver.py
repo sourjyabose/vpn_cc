@@ -91,13 +91,19 @@ def sendToWebsocket(msg):
     smsg=msg
     send=routingservers
         
-@server.get("/adminPanel/register/{email}/{passwd}/{servername}/{serverkey}")
+@server.get("/adminPanel/registerServer/{email}/{passwd}/{servername}/{serverkey}")
 async def registerServer(email,passwd,servername,serverkey):
     if verifynonce(email,"password",passwd,role="admins"):
-        db["servers"][servername]={}
-        db["servers"][servername]["serverkey"]=serverkey
-        savetodisk()
-        return {"status":"success"}
+        try :
+            db["servers"][servername]
+            return {"status":"error",
+                    "message":"Server Already Exist"}
+        except Exception as e:
+
+            db["servers"][servername]={}
+            db["servers"][servername]["serverkey"]=serverkey
+            savetodisk()
+            return {"status":"success"}
     else:
         return {"status":"error",
                 "message":"Auth Error"}
@@ -109,10 +115,17 @@ async def rmServer(email,passwd,servername):
     if verifynonce(email,"password",passwd,role="admins"):
         try:    
             del db["servers"][servername]
-            ind=db["servers"]["servernamelist"].index(servername)
-            del db["servers"]["serveriplist"][ind]
-            del db["servers"]["serverportlist"][ind]
-            del db["servers"]["servernamelist"][ind]
+            
+            while 1==1:
+                print("loop")
+                try:
+                    ind=db["servers"]["servernamelist"].index(servername)
+                    del db["servers"]["serveriplist"][ind]
+                    del db["servers"]["serverportlist"][ind]
+                    del db["servers"]["servernamelist"][ind]
+                except Exception as e:
+                    break
+
             savetodisk()
             return {"status":"success"}
         except Exception as e:
@@ -142,6 +155,17 @@ async def blockUser(email,passwd,userEmail):
             db["users"][userEmail]["blocked"]=1;
             sendToWebsocket({"action":"blockUser",
                              "email":email});
+            savetodisk()
+            return {"status":"success"}
+    else:
+        return {"status":"error",
+                "message":"Auth Error"}
+
+@server.get("/adminPanel/unblockUser/{email}/{passwd}/{userEmail}")
+async def unblockUser(email,passwd,userEmail):
+    if verifynonce(email,"password",passwd,role="admins"):
+            db["users"][userEmail]["blocked"]=0;
+            
             savetodisk()
             return {"status":"success"}
     else:
@@ -184,6 +208,23 @@ async def adminenquiry(email,passwd,userEmail):
         return {"status":"error",
                 "message":"Auth Fail"}
 
+@server.get("/adminPanel/serverquery/{email}/{passwd}/")
+async def adminserverenquiry(email,passwd):
+    if verifynonce(email,"password",passwd,role="admins"):
+        return {"status":"success",
+                "serverlist":db["servers"]["servernamelist"]}
+    else:
+        return {"status":"error",
+                "message":"Auth Fail"}
+
+@server.get("/adminPanel/loginVerification/{email}/{passwd}/")
+async def adminserverenquiry(email,passwd):
+    if verifynonce(email,"password",passwd,role="admins"):
+        return {"status":"success"}
+    else:
+        return {"status":"error",
+                "message":"Auth Fail"}
+
 @server.get("/adminPanel/changeUserEmail/{email}/{passwd}/{userEmail}/{newUserEmail}")
 async def changeUserEmail(email,passwd,userEmail,newUserEmail):
     if verifynonce(email,"password",passwd,role="admins"):
@@ -216,8 +257,8 @@ async def listusers(email,passwd,startingRange,endingRange):
 
 
 
-@server.get("/adminPanel/nonce")
-async def getnonce(request:Request):
+@server.get("/admin/nonce")
+async def getadminnonce(request:Request):
     req=await request.json()
     db["admins"][req["UEmail"]]["nonce"]+=1
     return {"nonce":db["admins"][req["UEmail"]]["nonce"]}
