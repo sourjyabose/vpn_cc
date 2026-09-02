@@ -247,10 +247,7 @@ async def listusers(email,passwd,startingRange,endingRange):
         data={}
         for uemail,details in list(db["users"].items())[int(startingRange):int(endingRange)]:
             data[uemail]=copy.deepcopy(details)
-            try:
-                del data[uemail]["password"]
-            except Exception as e:
-                pass
+            del data[uemail]["password"]
         return {"status":"success",
                 "data":data}
         
@@ -260,10 +257,10 @@ async def listusers(email,passwd,startingRange,endingRange):
 
 
 
-@server.post("/admin/nonce")
+@server.get("/admin/nonce")
 async def getadminnonce(request:Request):
     req=await request.json()
-    db["admins"][req["UEmail"]]["nonce"]+=0
+    db["admins"][req["UEmail"]]["nonce"]+=1
     return {"nonce":db["admins"][req["UEmail"]]["nonce"]}
 
 
@@ -414,10 +411,3 @@ async def recharge(request:Request):
 }
     else:
         return {"status": "error","message":"Authentication Failed"}
-
-
-    
-
-    
-    
-

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - admin_dashboard.html</title>
+    <style>
+        :root {
+            --doc-bg: #f8fafc;
+            --doc-card-bg: #ffffff;
+            --doc-text: #0f172a;
+            --doc-muted: #475569;
+            --doc-light: #64748b;
+            --doc-border: #e2e8f0;
+            --doc-primary: #059669;
+            --doc-code-bg: #f1f5f9;
+            --doc-font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--doc-font);
+            background-color: var(--doc-bg);
+            color: var(--doc-text);
+            line-height: 1.6;
+            padding: 2.5rem 1.5rem;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .doc-header {
+            background-color: var(--doc-card-bg);
+            border: 1px solid var(--doc-border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 6px solid var(--doc-primary);
+        }
+        .section-card {
+            background-color: var(--doc-card-bg);
+            border: 1px solid var(--doc-border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
+        h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 1rem; border-bottom: 2px solid var(--doc-border); padding-bottom: 0.5rem; }
+        h3 { font-size: 1.1rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+        p { margin-bottom: 1rem; color: var(--doc-muted); }
+        ul { margin-left: 1.5rem; margin-bottom: 1rem; color: var(--doc-muted); }
+        li { margin-bottom: 0.5rem; }
+        code { font-family: ui-monospace, monospace; background: var(--doc-code-bg); padding: 2px 6px; border-radius: 4px; }
+        pre { background: var(--doc-code-bg); padding: 1rem; border-radius: 8px; overflow-x: auto; font-family: ui-monospace, monospace; font-size: 0.85rem; margin-bottom: 1rem; }
+        .back-link { display: inline-block; margin-bottom: 1rem; color: var(--doc-primary); text-decoration: none; font-weight: 600; }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="project_documentation.html" class="back-link">&larr; Back to Project Documentation</a>
+        <header class="doc-header">
+            <h1>File Documentation: <code>admin_dashboard.html</code></h1>
+            <p>Admin Dashboard &amp; Control Center Interface Specification</p>
+        </header>
+
+        <!-- First -->
+        <section class="section-card">
+            <h2>First: Necessity, Role, and Project Interaction</h2>
+            <p>
+                <strong>Why this file is necessary:</strong> <code>admin_dashboard.html</code> serves as the primary operational workspace for CloudVPN+ administrators. It exposes intuitive, real-time controls for all administrative endpoints in <code>ccserver.py</code>, enabling cluster node orchestration, user management, bandwidth monitoring, account blocking/unblocking, and diagnostic queries.
+            </p>
+            <p>
+                <strong>How it fits into the project:</strong> It provides the UI canvas onto which <code>admin_dashboard.js</code> binds event listeners, renders tables, injects stat counters, and manages modal workflows.
+            </p>
+            <p>
+                <strong>How it interacts with the project:</strong>
+                <ul>
+                    <li>Imports <code>css/admin_style.css</code> for modular glassmorphic layout and theme styling.</li>
+                    <li>Imports <code>js/sha256.js</code>, <code>js/admin_api.js</code>, <code>js/admin_auth.js</code>, and <code>js/admin_dashboard.js</code> to initialize the reactive controller upon load.</li>
+                    <li>Renders responsive views across multiple tab panes (Overview, Users, Servers, Diagnostics) and dialog modals.</li>
+                </ul>
+            </p>
+        </section>
+
+        <!-- Second -->
+        <section class="section-card">
+            <h2>Second: Overall Project Structure &amp; Architectural Context</h2>
+            <p>
+                <code>admin_dashboard.html</code> represents the presentation container for all administrative capabilities. It contains separate glass panels designed with high visual contrast and distinct boundaries:
+            </p>
+            <pre>
++--------------------------------------------------------------------------------------------------+
+| Top Navbar (Brand, Dynamic Base URL config button, Active Admin Badge, Sign Out)                 |
++--------------------------------------------------------------------------------------------------+
+| SIDEBAR (Glass Panel)          | MAIN CONTENT AREA (Dynamic Tab Panes)                            |
+|                                |                                                                 |
+| [Overview & Fleet Tab]         | [tab-overview]                                                  |
+| [User Directory Tab]           |   - Stat Metrics Grid (Servers, Users, Active, Blocked, Usage)  |
+| [Server Registry Tab]          |   - Active Server Fleet Grid                                    |
+| [Live Diagnostics Tab]         |   - Direct User Account Lookup Bar                              |
+|                                |                                                                 |
+| [Refresh Data Button]          | [tab-users]                                                     |
+|                                |   - Paginated Users Table (Quota, Used, Rem, Status, Actions)   |
+|                                |   - Range Pagination Bar (Prev / Next Buttons)                  |
+|                                |                                                                 |
+|                                | [tab-servers]                                                   |
+|                                |   - Server Fleet Table & Deregister Actions                     |
+|                                |   - Register Server Trigger Button                              |
+|                                |                                                                 |
+|                                | [tab-diagnostics]                                               |
+|                                |   - Interactive Query Console & JSON Output Viewer              |
++--------------------------------------------------------------------------------------------------+
+| MODALS: Register Server | Change Email | Inspect User | Confirm Action | Base URL Configuration  |
+| TOASTS: Dynamic Floating Status Notifications                                                   |
++--------------------------------------------------------------------------------------------------+
+            </pre>
+        </section>
+
+        <!-- Third -->
+        <section class="section-card">
+            <h2>Third: Detailed Breakdown of Structural Sections &amp; Elements</h2>
+
+            <h3>1. Top Navbar Header (<code>&lt;header class="glass-panel top-navbar"&gt;</code>)</h3>
+            <ul>
+                <li><code>#btnOpenBaseUrlModal</code>: Button displaying current origin and opening the base URL configuration modal.</li>
+                <li><code>#currentBaseUrlText</code>: Text container showing the active base URL (e.g. <code>http://localhost:8000</code>).</li>
+                <li><code>#currentAdminEmail</code>: Text badge showing authenticated administrator identity (e.g. <code>root</code>).</li>
+                <li><code>#btnLogout</code>: Button bound to <code>AdminAuth.logout()</code>.</li>
+            </ul>
+
+            <h3>2. Sidebar Navigation (<code>&lt;aside class="glass-panel dashboard-sidebar"&gt;</code>)</h3>
+            <ul>
+                <li><code>button[data-tab-target="overview"]</code>: Activates the fleet overview pane.</li>
+                <li><code>button[data-tab-target="users"]</code>: Activates the user directory and pagination pane.</li>
+                <li><code>button[data-tab-target="servers"]</code>: Activates the server registry pane.</li>
+                <li><code>button[data-tab-target="diagnostics"]</code>: Activates the live query console pane.</li>
+            </ul>
+
+            <h3>3. Overview &amp; Fleet Pane (<code>#tab-overview</code>)</h3>
+            <ul>
+                <li><code>#statTotalServers</code>: Displays total registered servers count.</li>
+                <li><code>#statTotalUsers</code>: Displays total user accounts count.</li>
+                <li><code>#statActiveUsers</code>: Displays active (unblocked) user accounts count.</li>
+                <li><code>#statBlockedUsers</code>: Displays blocked accounts count.</li>
+                <li><code>#statTotalBandwidth</code>: Displays aggregate bandwidth used formatted in MB/GB.</li>
+                <li><code>#overviewServersList</code>: Dynamic card grid showing registered servers with online status.</li>
+                <li><code>#formSearchUser</code> &amp; <code>#searchUserEmail</code>: Quick lookup form calling <code>CloudVPNDashboard.inspectUser()</code>.</li>
+            </ul>
+
+            <h3>4. User Directory Pane (<code>#tab-users</code>)</h3>
+            <ul>
+                <li><code>#usersTableBody</code>: Table body rendered with user email, nonce, device ID, quota, usage, status, and action buttons.</li>
+                <li><code>#userPaginationInfo</code>: Displays current slice range (e.g. <code>0 - 20</code>).</li>
+                <li><code>#btnPrevUserPage</code> &amp; <code>#btnNextUserPage</code>: Pagination step buttons.</li>
+            </ul>
+
+            <h3>5. Server Registry Pane (<code>#tab-servers</code>)</h3>
+            <ul>
+                <li><code>#serversTableBody</code>: Table listing server names with deregistration actions.</li>
+                <li><code>#btnOpenRegisterServer</code>: Triggers server registration modal.</li>
+            </ul>
+
+            <h3>6. Live Diagnostics Pane (<code>#tab-diagnostics</code>)</h3>
+            <ul>
+                <li><code>#diagEndpointSelect</code>: Dropdown to select target administrative endpoint.</li>
+                <li><code>#diagParamInput</code>: Text input for route parameters.</li>
+                <li><code>#btnRunDiagnostic</code>: Executes query with fresh nonce.</li>
+                <li><code>#diagResultBox</code>: Formatted JSON response viewer.</li>
+            </ul>
+
+            <h3>7. Modals &amp; Toasts</h3>
+            <ul>
+                <li><code>#modalRegisterServer</code>: Modal dialog for registering a new server node (inputs: <code>#regServerName</code>, <code>#regServerKey</code>).</li>
+                <li><code>#modalChangeEmail</code>: Modal dialog for changing user email (inputs: <code>#changeEmailOld</code>, <code>#changeEmailNew</code>).</li>
+                <li><code>#modalInspectUser</code>: Modal dialog rendering full user data and raw JSON.</li>
+                <li><code>#modalConfirm</code>: Reusable confirmation dialog for dangerous actions (remove server, delete user).</li>
+                <li><code>#modalBaseUrl</code>: Configuration modal for setting a custom backend origin.</li>
+                <li><code>#toastContainer</code>: Absolute-positioned container for floating alert notifications.</li>
+            </ul>
+
+            <h3>8. Script Dependencies</h3>
+            <ul>
+                <li><code>imported sha256 from js/sha256.js</code> (Pure JS hashing).</li>
+                <li><code>imported CloudVPNApi from js/admin_api.js</code> (API client).</li>
+                <li><code>imported AdminAuth from js/admin_auth.js</code> (Session authentication guard).</li>
+                <li><code>imported CloudVPNDashboard from js/admin_dashboard.js</code> (Dashboard logic controller).</li>
+            </ul>
+        </section>
+    </div>
+</body>
+</html>

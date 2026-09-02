@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - admin_auth.js</title>
+    <style>
+        :root {
+            --doc-bg: #f8fafc;
+            --doc-card-bg: #ffffff;
+            --doc-text: #0f172a;
+            --doc-muted: #475569;
+            --doc-light: #64748b;
+            --doc-border: #e2e8f0;
+            --doc-primary: #059669;
+            --doc-code-bg: #f1f5f9;
+            --doc-font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--doc-font);
+            background-color: var(--doc-bg);
+            color: var(--doc-text);
+            line-height: 1.6;
+            padding: 2.5rem 1.5rem;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .doc-header {
+            background-color: var(--doc-card-bg);
+            border: 1px solid var(--doc-border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 6px solid var(--doc-primary);
+        }
+        .section-card {
+            background-color: var(--doc-card-bg);
+            border: 1px solid var(--doc-border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
+        h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 1rem; border-bottom: 2px solid var(--doc-border); padding-bottom: 0.5rem; }
+        h3 { font-size: 1.1rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+        p { margin-bottom: 1rem; color: var(--doc-muted); }
+        ul { margin-left: 1.5rem; margin-bottom: 1rem; color: var(--doc-muted); }
+        li { margin-bottom: 0.5rem; }
+        code { font-family: ui-monospace, monospace; background: var(--doc-code-bg); padding: 2px 6px; border-radius: 4px; }
+        pre { background: var(--doc-code-bg); padding: 1rem; border-radius: 8px; overflow-x: auto; font-family: ui-monospace, monospace; font-size: 0.85rem; margin-bottom: 1rem; }
+        .back-link { display: inline-block; margin-bottom: 1rem; color: var(--doc-primary); text-decoration: none; font-weight: 600; }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="project_documentation.html" class="back-link">&larr; Back to Project Documentation</a>
+        <header class="doc-header">
+            <h1>File Documentation: <code>admin_auth.js</code></h1>
+            <p>Admin Authentication &amp; Session Management Specification</p>
+        </header>
+
+        <!-- First -->
+        <section class="section-card">
+            <h2>First: Necessity, Role, and Project Interaction</h2>
+            <p>
+                <strong>Why this file is necessary:</strong> <code>admin_auth.js</code> provides administrative identity validation rules, session storage lifecycle controls, and route protection guards. It enforces the specific requirement that the username <code>root</code> is accepted directly without requiring email formatting, while all other identities must adhere to valid RFC email structures.
+            </p>
+            <p>
+                <strong>How it fits into the project:</strong> It sits between the user interface views (<code>admin_login.html</code>, <code>admin_dashboard.html</code>, <code>index.html</code>) and the communication client (<code>admin_api.js</code>). It prevents unauthorized access to the dashboard by enforcing authentication checks.
+            </p>
+            <p>
+                <strong>How it interacts with the project:</strong>
+                <ul>
+                    <li>Imports <code>CloudVPNApi</code> from <code>js/admin_api.js</code> to invoke <code>verifyLogin()</code>.</li>
+                    <li>Utilized by <code>admin_login.html</code> to validate inputs and authenticate.</li>
+                    <li>Utilized by <code>admin_dashboard.html</code> to enforce <code>AdminAuth.requireAuth()</code> on initialization and handle user logout.</li>
+                    <li>Utilized by <code>index.html</code> to evaluate whether to direct traffic to the login screen or dashboard.</li>
+                </ul>
+            </p>
+        </section>
+
+        <!-- Second -->
+        <section class="section-card">
+            <h2>Second: Overall Project Structure &amp; Architectural Context</h2>
+            <p>
+                <code>admin_auth.js</code> manages client-side authentication state:
+            </p>
+            <pre>
+                                 +-------------------------+
+                                 |  User Login Form Submit |
+                                 +-------------------------+
+                                              |
+                                              v
+                              [validateAdminIdentity(input)]
+                                              |
+                          +-------------------+-------------------+
+                          |                                       |
+                   Input is "root"?                      Matches RFC Regex?
+                          | (Yes)                                 | (Yes)
+                          +-------------------+-------------------+
+                                              |
+                                              v
+                                  [CloudVPNApi.verifyLogin()]
+                                              |
+                                   +----------+----------+
+                                   |                     |
+                                [Success]             [Failure]
+                                   |                     |
+                        [saveSession(session)]      [Return error]
+                                   |
+                         [window.location -> admin_dashboard.html]
+            </pre>
+        </section>
+
+        <!-- Third -->
+        <section class="section-card">
+            <h2>Third: Detailed Breakdown of Functions and Members in <code>AdminAuth</code></h2>
+
+            <h3>1. Property: <code>STORAGE_KEY</code></h3>
+            <ul>
+                <li><strong>Type:</strong> <code>string</code> (Value: <code>'cloudvpn_admin_session'</code>)</li>
+                <li><strong>Purpose:</strong> Standardized key used to store and retrieve administrative session tokens in the browser's <code>sessionStorage</code>.</li>
+            </ul>
+
+            <h3>2. <code>validateAdminIdentity(input)</code></h3>
+            <ul>
+                <li><strong>Purpose:</strong> Validates user identity input. If the input is <code>"root"</code> (case-insensitive), it is immediately marked valid. If not <code>"root"</code>, it is validated against RFC 5322 email regular expression:
+                    <pre>/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/</pre>
+                </li>
+                <li><strong>Data Types:</strong>
+                    <ul>
+                        <li><code>input</code> (<code>string</code>): Identity string from login form.</li>
+                        <li><strong>Returns:</strong> <code>{ isValid: boolean, message: string }</code></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>3. <code>validatePassword(password)</code></h3>
+            <ul>
+                <li><strong>Purpose:</strong> Validates that the master password input is non-empty.</li>
+                <li><strong>Data Types:</strong> <code>password</code> (<code>string</code>). Returns <code>{ isValid: boolean, message: string }</code>.</li>
+            </ul>
+
+            <h3>4. <code>getSession()</code></h3>
+            <ul>
+                <li><strong>Purpose:</strong> Parses and returns the active session object from <code>sessionStorage</code>.</li>
+                <li><strong>Data Types:</strong> Takes no arguments. Returns <code>{ email: string, password: string, loggedInAt: string } | null</code>.</li>
+            </ul>
+
+            <h3>5. <code>saveSession(email, password)</code></h3>
+            <ul>
+                <li><strong>Purpose:</strong> Serializes administrator credentials and login timestamp into <code>sessionStorage</code>.</li>
+                <li><strong>Data Types:</strong> <code>email</code> (<code>string</code>), <code>password</code> (<code>string</code>). Returns <code>void</code>.</li>
+            </ul>
+
+            <h3>6. <code>clearSession()</code></h3>
+            <ul>
+                <li><strong>Purpose:</strong> Deletes <code>cloudvpn_admin_session</code> from <code>sessionStorage</code>.</li>
+                <li><strong>Data Types:</strong> Returns <code>void</code>.</li>
+            </ul>
+
+            <h3>7. <code>login(identity, password)</code></h3>
+            <ul>
+                <li><strong>Purpose:</strong> Validates input fields, calls <code>CloudVPNApi.verifyLogin()</code>, saves session on success, or returns error message.</li>
+                <li><strong>Data Types:</strong> <code>identity</code> (<code>string</code>), <code>password</code> (<code>string</code>). Returns <code>Promise&lt;{ success: boolean, message?: string }&gt;</code>.</li>
+                <li><strong>Imported Dependencies:</strong> <code>imported CloudVPNApi from js/admin_api.js (Invokes verifyLogin)</code>.</li>
+            </ul>
+
+            <h3>8. <code>logout()</code></h3>
+            <ul>
+                <li><strong>Purpose:</strong> Clears session and redirects the window to <code>admin_login.html</code>.</li>
+                <li><strong>Data Types:</strong> Returns <code>void</code>.</li>
+            </ul>
+
+            <h3>9. <code>requireAuth()</code></h3>
+            <ul>
+                <li><strong>Purpose:</strong> Route guard that checks if an active session exists. If missing, forces immediate redirection to <code>admin_login.html</code>.</li>
+                <li><strong>Data Types:</strong> Returns <code>{ email: string, password: string } | null</code>.</li>
+            </ul>
+        </section>
+    </div>
+</body>
+</html>

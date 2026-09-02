@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - admin_api.js</title>
+    <style>
+        :root {
+            --doc-bg: #f8fafc;
+            --doc-card-bg: #ffffff;
+            --doc-text: #0f172a;
+            --doc-muted: #475569;
+            --doc-light: #64748b;
+            --doc-border: #e2e8f0;
+            --doc-primary: #059669;
+            --doc-code-bg: #f1f5f9;
+            --doc-font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--doc-font);
+            background-color: var(--doc-bg);
+            color: var(--doc-text);
+            line-height: 1.6;
+            padding: 2.5rem 1.5rem;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .doc-header {
+            background-color: var(--doc-card-bg);
+            border: 1px solid var(--doc-border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 6px solid var(--doc-primary);
+        }
+        .section-card {
+            background-color: var(--doc-card-bg);
+            border: 1px solid var(--doc-border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
+        h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 1rem; border-bottom: 2px solid var(--doc-border); padding-bottom: 0.5rem; }
+        h3 { font-size: 1.1rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+        p { margin-bottom: 1rem; color: var(--doc-muted); }
+        ul { margin-left: 1.5rem; margin-bottom: 1rem; color: var(--doc-muted); }
+        li { margin-bottom: 0.5rem; }
+        code { font-family: ui-monospace, monospace; background: var(--doc-code-bg); padding: 2px 6px; border-radius: 4px; }
+        pre { background: var(--doc-code-bg); padding: 1rem; border-radius: 8px; overflow-x: auto; font-family: ui-monospace, monospace; font-size: 0.85rem; margin-bottom: 1rem; }
+        .back-link { display: inline-block; margin-bottom: 1rem; color: var(--doc-primary); text-decoration: none; font-weight: 600; }
+        .back-link:hover { text-decoration: underline; }
+        .table-doc { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .table-doc th, .table-doc td { border: 1px solid var(--doc-border); padding: 0.75rem 1rem; text-align: left; }
+        .table-doc th { background-color: var(--doc-code-bg); font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="project_documentation.html" class="back-link">&larr; Back to Project Documentation</a>
+        <header class="doc-header">
+            <h1>File Documentation: <code>admin_api.js</code></h1>
+            <p>CloudVPN+ Admin API Communication Client Specification</p>
+        </header>
+
+        <!-- First -->
+        <section class="section-card">
+            <h2>First: Necessity, Role, and Project Interaction</h2>
+            <p>
+                <strong>Why this file is necessary:</strong> <code>admin_api.js</code> encapsulates all REST API network operations between the frontend and the <code>ccserver.py</code> FastAPI backend. It provides automated Base URL extraction, nonce retrieval via <code>XMLHttpRequest</code>, SHA-256 token generation, and strongly typed wrapper methods for all ten <code>/adminPanel/</code> routes.
+            </p>
+            <p>
+                <strong>How it fits into the project:</strong> It decouples UI views from direct network requests. Both <code>admin_auth.js</code> and <code>admin_dashboard.js</code> rely entirely on <code>CloudVPNApi</code> to communicate with the server.
+            </p>
+            <p>
+                <strong>How it interacts with the project:</strong>
+                <ul>
+                    <li>Imports <code>sha256</code> from <code>js/sha256.js</code> to compute the dynamic token in <code>encodeNonce()</code>.</li>
+                    <li>Provides API services to <code>admin_auth.js</code> (login verification).</li>
+                    <li>Provides API services to <code>admin_dashboard.js</code> (server management, user listing, pagination, blocking, deleting, and email updates).</li>
+                </ul>
+            </p>
+        </section>
+
+        <!-- Second -->
+        <section class="section-card">
+            <h2>Second: Overall Project Structure &amp; Architectural Context</h2>
+            <p>
+                <code>admin_api.js</code> acts as the client gateway. Before executing any administrative GET request, it transparently triggers the nonce handshake:
+            </p>
+            <pre>
+Caller (admin_auth.js or admin_dashboard.js)
+                      |
+                      v
+CloudVPNApi.adminGetRequest(routeTemplate, adminEmail, adminPassword)
+                      |
+                      +---> Step 1: CloudVPNApi.encodeNonce(adminEmail, adminPassword)
+                      |         |
+                      |         +---> CloudVPNApi.getAdminNonce(adminEmail) 
+                      |         |        [XHR GET /admin/nonce with {"UEmail": email}]
+                      |         |
+                      |         +---> sha256(adminPassword + nonce) -> digestToken
+                      |
+                      +---> Step 2: url = routeTemplate(adminEmail, digestToken)
+                      |
+                      +---> Step 3: XHR GET url -> Returns parsed JSON response
+                      |
+                      v
+Promise resolves with server payload {status: "success", ...}
+            </pre>
+        </section>
+
+        <!-- Third -->
+        <section class="section-card">
+            <h2>Third: Detailed Breakdown of Functions and Members in <code>CloudVPNApi</code></h2>
+
+            <h3>1. <code>getBaseUrl()</code></h3>
+            <ul>
+                <li><strong>Purpose:</strong> Extracts the protocol and host from <code>window.location</code> or retrieves an override URL from <code>sessionStorage</code>.</li>
+                <li><strong>Data Types:</strong> Takes no arguments. Returns <code>string</code> (e.g., <code>"http://localhost:8000"</code>).</li>
+                <li><strong>Rationale:</strong> Enables zero-config hosting on any port or domain without hardcoding backend endpoints.</li>
+            </ul>
+
+            <h3>2. <code>setCustomBaseUrl(url)</code></h3>
+            <ul>
+                <li><strong>Purpose:</strong> Saves or removes a custom Base URL in <code>sessionStorage</code>.</li>
+                <li><strong>Data Types:</strong> <code>url</code> (<code>string</code>). Returns <code>void</code>.</li>
+            </ul>
+
+            <h3>3. <code>getAdminNonce(email)</code></h3>
+            <ul>
+                <li><strong>Purpose:</strong> Issues an HTTP GET request to <code>/admin/nonce</code> transmitting the JSON body <code>{"UEmail": email}</code> via <code>XMLHttpRequest</code>.</li>
+                <li><strong>Why Needed:</strong> <code>ccserver.py</code> defines <code>@server.get("/admin/nonce")</code> expecting <code>req = await request.json()</code>. Because standard browser <code>fetch()</code> disallows body payloads on GET requests, <code>XMLHttpRequest</code> is used.</li>
+                <li><strong>Data Types:</strong> <code>email</code> (<code>string</code>). Returns <code>Promise&lt;number&gt;</code> resolving to the incremented nonce integer.</li>
+                <li><strong>Error Handling:</strong> Catches HTTP errors, non-JSON responses, and connection refusals.</li>
+            </ul>
+
+            <h3>4. <code>encodeNonce(email, actualPassword)</code></h3>
+            <ul>
+                <li><strong>Purpose:</strong> Executes the nonce retrieval and computes <code>sha256(actualPassword + String(nonce))</code>.</li>
+                <li><strong>Translation of Python:</strong>
+                    <pre>
+def encodeNonce(email, value):
+    nonce = requests.get(url + "/admin/nonce", json={"UEmail": email}).json()["nonce"]
+    return hashlib.sha256((value + str(nonce)).encode("utf-8")).hexdigest()
+                    </pre>
+                </li>
+                <li><strong>Data Types:</strong> <code>email</code> (<code>string</code>), <code>actualPassword</code> (<code>string</code>). Returns <code>Promise&lt;string&gt;</code> (64-char hex string).</li>
+                <li><strong>Imported Dependencies:</strong> <code>imported sha256 from js/sha256.js (Cryptographic SHA-256 calculation)</code>.</li>
+            </ul>
+
+            <h3>5. <code>adminGetRequest(routeTemplate, adminEmail, adminPassword)</code></h3>
+            <ul>
+                <li><strong>Purpose:</strong> Core executor for all administrative requests. Handles fresh nonce token computation, URL resolution, and JSON parsing.</li>
+                <li><strong>Data Types:</strong>
+                    <ul>
+                        <li><code>routeTemplate</code> (<code>function(string, string): string</code>): Factory returning target endpoint URL.</li>
+                        <li><code>adminEmail</code> (<code>string</code>): Admin username or email.</li>
+                        <li><code>adminPassword</code> (<code>string</code>): Admin password.</li>
+                        <li><strong>Returns:</strong> <code>Promise&lt;object&gt;</code>: Parsed server JSON response.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>6. Route Wrapper Methods</h3>
+            <table class="table-doc">
+                <thead>
+                    <tr>
+                        <th>Method Signature</th>
+                        <th>Target Backend Route</th>
+                        <th>Parameters &amp; Return Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>verifyLogin(email, password)</code></td>
+                        <td><code>GET /adminPanel/loginVerification/{email}/{passwd}/</code></td>
+                        <td>Params: <code>email: string, password: string</code><br>Returns: <code>Promise&lt;{status: string, message?: string}&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>fetchServers(email, password)</code></td>
+                        <td><code>GET /adminPanel/serverquery/{email}/{passwd}/</code></td>
+                        <td>Params: <code>email: string, password: string</code><br>Returns: <code>Promise&lt;{status: string, serverlist?: string[], message?: string}&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>registerServer(email, password, serverName, serverKey)</code></td>
+                        <td><code>GET /adminPanel/registerServer/{email}/{passwd}/{servername}/{serverkey}</code></td>
+                        <td>Params: <code>email: string, password: string, serverName: string, serverKey: string</code><br>Returns: <code>Promise&lt;{status: string, message?: string}&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>removeServer(email, password, serverName)</code></td>
+                        <td><code>GET /adminPanel/removeServer/{email}/{passwd}/{servername}</code></td>
+                        <td>Params: <code>email: string, password: string, serverName: string</code><br>Returns: <code>Promise&lt;{status: string, message?: string}&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>listUsers(email, password, startingRange, endingRange)</code></td>
+                        <td><code>GET /adminPanel/listusers/{email}/{passwd}/{startingRange}/{endingRange}</code></td>
+                        <td>Params: <code>email: string, password: string, startingRange: number, endingRange: number</code><br>Returns: <code>Promise&lt;{status: string, data?: object, message?: string}&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>queryUser(email, password, userEmail)</code></td>
+                        <td><code>GET /adminPanel/query/{email}/{passwd}/{userEmail}</code></td>
+                        <td>Params: <code>email: string, password: string, userEmail: string</code><br>Returns: <code>Promise&lt;{status: string, data?: object, message?: string}&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>blockUser(email, password, userEmail)</code></td>
+                        <td><code>GET /adminPanel/blockUser/{email}/{passwd}/{userEmail}</code></td>
+                        <td>Params: <code>email: string, password: string, userEmail: string</code><br>Returns: <code>Promise&lt;{status: string, message?: string}&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>unblockUser(email, password, userEmail)</code></td>
+                        <td><code>GET /adminPanel/unblockUser/{email}/{passwd}/{userEmail}</code></td>
+                        <td>Params: <code>email: string, password: string, userEmail: string</code><br>Returns: <code>Promise&lt;{status: string, message?: string}&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>deleteUser(email, password, userEmail)</code></td>
+                        <td><code>GET /adminPanel/deleteUser/{email}/{passwd}/{userEmail}</code></td>
+                        <td>Params: <code>email: string, password: string, userEmail: string</code><br>Returns: <code>Promise&lt;{status: string, message?: string}&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>changeUserEmail(email, password, userEmail, newUserEmail)</code></td>
+                        <td><code>GET /adminPanel/changeUserEmail/{email}/{passwd}/{userEmail}/{newUserEmail}</code></td>
+                        <td>Params: <code>email: string, password: string, userEmail: string, newUserEmail: string</code><br>Returns: <code>Promise&lt;{status: string, message?: string}&gt;</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - sha256.js</title>
+    <style>
+        :root {
+            --doc-bg: #f8fafc;
+            --doc-card-bg: #ffffff;
+            --doc-text: #0f172a;
+            --doc-muted: #475569;
+            --doc-light: #64748b;
+            --doc-border: #e2e8f0;
+            --doc-primary: #059669;
+            --doc-code-bg: #f1f5f9;
+            --doc-font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--doc-font);
+            background-color: var(--doc-bg);
+            color: var(--doc-text);
+            line-height: 1.6;
+            padding: 2.5rem 1.5rem;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .doc-header {
+            background-color: var(--doc-card-bg);
+            border: 1px solid var(--doc-border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 6px solid var(--doc-primary);
+        }
+        .section-card {
+            background-color: var(--doc-card-bg);
+            border: 1px solid var(--doc-border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
+        h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 1rem; border-bottom: 2px solid var(--doc-border); padding-bottom: 0.5rem; }
+        h3 { font-size: 1.1rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+        p { margin-bottom: 1rem; color: var(--doc-muted); }
+        ul { margin-left: 1.5rem; margin-bottom: 1rem; color: var(--doc-muted); }
+        li { margin-bottom: 0.5rem; }
+        code { font-family: ui-monospace, monospace; background: var(--doc-code-bg); padding: 2px 6px; border-radius: 4px; }
+        pre { background: var(--doc-code-bg); padding: 1rem; border-radius: 8px; overflow-x: auto; font-family: ui-monospace, monospace; font-size: 0.85rem; margin-bottom: 1rem; }
+        .back-link { display: inline-block; margin-bottom: 1rem; color: var(--doc-primary); text-decoration: none; font-weight: 600; }
+        .back-link:hover { text-decoration: underline; }
+        .table-doc { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .table-doc th, .table-doc td { border: 1px solid var(--doc-border); padding: 0.75rem 1rem; text-align: left; }
+        .table-doc th { background-color: var(--doc-code-bg); font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="project_documentation.html" class="back-link">&larr; Back to Project Documentation</a>
+        <header class="doc-header">
+            <h1>File Documentation: <code>sha256.js</code></h1>
+            <p>Pure JavaScript Cryptographic SHA-256 Algorithm Specification</p>
+        </header>
+
+        <!-- First -->
+        <section class="section-card">
+            <h2>First: Necessity, Role, and Project Interaction</h2>
+            <p>
+                <strong>Why this file is necessary:</strong> Modern browsers restrict the Web Cryptography API (<code>window.crypto.subtle</code>) to Secure Contexts (HTTPS and localhost). When CloudVPN+ is deployed over plain HTTP on remote IP addresses or non-secure origins, <code>crypto.subtle</code> is <code>undefined</code>. <code>sha256.js</code> is a zero-dependency, self-contained pure JavaScript implementation of the NIST FIPS 180-4 SHA-256 standard, enabling reliable password token hashing in all HTTP browser environments.
+            </p>
+            <p>
+                <strong>How it fits into the project:</strong> It translates the Python hashing logic:
+                <pre>hashlib.sha256((value + str(nonce)).encode("utf-8")).hexdigest()</pre>
+                into client-side JavaScript, guaranteeing byte-for-byte output equivalence.
+            </p>
+            <p>
+                <strong>How it interacts with the project:</strong>
+                It is loaded before <code>admin_api.js</code> and exposes the global function <code>window.sha256(input)</code> (or CommonJS <code>module.exports</code> in Node environments). <code>CloudVPNApi.encodeNonce()</code> directly calls <code>sha256()</code> to construct authenticated route URLs.
+            </p>
+        </section>
+
+        <!-- Second -->
+        <section class="section-card">
+            <h2>Second: Overall Project Structure &amp; Architectural Context</h2>
+            <p>
+                <code>sha256.js</code> operates at the foundational cryptographic utility layer:
+            </p>
+            <pre>
+[User Password & Server Nonce]
+              |
+              v
+[js/sha256.js: sha256(password + nonce)]
+              |
+              +---> [utf8Encode(input)] -> Converts string to Uint8Array UTF-8 bytes
+              |
+              +---> [rawSha256(bytes)]
+                       |
+                       +-- Padding (0x80 + 64-bit length)
+                       +-- 512-bit Chunk Processing
+                       +-- 64-Round Expansion & Compression (Ch, Maj, Sigma0, Sigma1)
+                       +-- Hexadecimal Digest Assembly (8 x 32-bit words)
+              |
+              v
+[64-Character Hex String Token] ---> [Used by js/admin_api.js for GET Requests]
+            </pre>
+        </section>
+
+        <!-- Third -->
+        <section class="section-card">
+            <h2>Third: Detailed Breakdown of Functions, Classes, and Members</h2>
+
+            <h3>1. <code>utf8Encode(str)</code></h3>
+            <ul>
+                <li><strong>Purpose:</strong> Encodes a JavaScript UTF-16 string into a UTF-8 byte array (<code>Uint8Array</code>), correctly parsing ASCII, multi-byte characters, and surrogate pairs.</li>
+                <li><strong>Why Needed:</strong> SHA-256 operates on raw UTF-8 byte streams. Direct <code>charCodeAt()</code> indexing without UTF-8 expansion would produce incorrect hashes for non-ASCII characters.</li>
+                <li><strong>Data Types:</strong>
+                    <ul>
+                        <li><strong>Input:</strong> <code>str</code> (<code>string</code>) - Input string to be encoded.</li>
+                        <li><strong>Returns:</strong> <code>Uint8Array</code> - Byte array representing UTF-8 stream.</li>
+                    </ul>
+                </li>
+                <li><strong>Variables:</strong>
+                    <ul>
+                        <li><code>utf8</code> (<code>Array&lt;number&gt;</code>): Dynamic array collecting byte values.</li>
+                        <li><code>charcode</code> (<code>number</code>): Unicode code point value.</li>
+                    </ul>
+                </li>
+                <li><strong>Dependencies:</strong> Falls back to manual bit-shifting if <code>window.TextEncoder</code> is unavailable.</li>
+            </ul>
+
+            <h3>2. <code>rawSha256(bytes)</code></h3>
+            <ul>
+                <li><strong>Purpose:</strong> Executes the 64-round SHA-256 compression pipeline over padded 512-bit message blocks.</li>
+                <li><strong>Why Needed:</strong> Computes the core cryptographic hash transformation.</li>
+                <li><strong>Data Types:</strong>
+                    <ul>
+                        <li><strong>Input:</strong> <code>bytes</code> (<code>Uint8Array</code>) - Raw UTF-8 bytes.</li>
+                        <li><strong>Returns:</strong> <code>string</code> - 64-character lowercase hexadecimal hash.</li>
+                    </ul>
+                </li>
+                <li><strong>Internal Constants &amp; State Variables:</strong>
+                    <ul>
+                        <li><code>K</code> (<code>Array&lt;number&gt;</code>): 64 round constant 32-bit words derived from the fractional parts of cube roots of the first 64 primes.</li>
+                        <li><code>H0</code> through <code>H7</code> (<code>number</code>): Initial 32-bit state words derived from fractional parts of square roots of first 8 primes.</li>
+                        <li><code>byteLen</code> (<code>number</code>): Original input length in bytes.</li>
+                        <li><code>bitLen</code> (<code>number</code>): Original input length in bits (<code>byteLen * 8</code>).</li>
+                        <li><code>newLen</code> (<code>number</code>): Padded length aligned to 64-byte (512-bit) boundaries.</li>
+                        <li><code>padded</code> (<code>Uint8Array</code>): Message buffer containing original bytes, separator byte <code>0x80</code>, and 64-bit big-endian bit length.</li>
+                        <li><code>view</code> (<code>DataView</code>): DataView wrapper used to safely write 64-bit length into buffer.</li>
+                        <li><code>W</code> (<code>Uint32Array(64)</code>): Message schedule array expanded per 512-bit block.</li>
+                        <li><code>a, b, c, d, e, f, g, h</code> (<code>number</code>): Working variables updated during the 64 compression rounds.</li>
+                    </ul>
+                </li>
+                <li><strong>Bitwise Operators:</strong> Uses <code>&gt;&gt;&gt; 0</code> extensively to coerce JavaScript numbers into 32-bit unsigned integers.</li>
+            </ul>
+
+            <h3>3. <code>rightRotate(val, amount)</code></h3>
+            <ul>
+                <li><strong>Purpose:</strong> Performs a 32-bit circular right rotation: <code>((val &gt;&gt;&gt; amount) | (val &lt;&lt; (32 - amount))) &gt;&gt;&gt; 0</code>.</li>
+                <li><strong>Data Types:</strong>
+                    <ul>
+                        <li><strong>Input:</strong> <code>val</code> (<code>number</code>, 32-bit uint), <code>amount</code> (<code>number</code>, bit shift count).</li>
+                        <li><strong>Returns:</strong> <code>number</code> (Rotated 32-bit uint).</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>4. <code>sha256(input)</code></h3>
+            <ul>
+                <li><strong>Purpose:</strong> Primary public entry point exposed globally on <code>window.sha256</code> or <code>module.exports</code>.</li>
+                <li><strong>Data Types:</strong>
+                    <ul>
+                        <li><strong>Input:</strong> <code>input</code> (<code>string | Uint8Array | any</code>).</li>
+                        <li><strong>Returns:</strong> <code>string</code> - 64-character hexadecimal digest.</li>
+                    </ul>
+                </li>
+                <li><strong>Interactions:</strong> Called by <code>CloudVPNApi.encodeNonce()</code> in <code>admin_api.js</code>.</li>
+            </ul>
+        </section>
+    </div>
+</body>
+</html>

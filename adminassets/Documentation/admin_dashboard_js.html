@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - admin_dashboard.js</title>
+    <style>
+        :root {
+            --doc-bg: #f8fafc;
+            --doc-card-bg: #ffffff;
+            --doc-text: #0f172a;
+            --doc-muted: #475569;
+            --doc-light: #64748b;
+            --doc-border: #e2e8f0;
+            --doc-primary: #059669;
+            --doc-code-bg: #f1f5f9;
+            --doc-font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--doc-font);
+            background-color: var(--doc-bg);
+            color: var(--doc-text);
+            line-height: 1.6;
+            padding: 2.5rem 1.5rem;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .doc-header {
+            background-color: var(--doc-card-bg);
+            border: 1px solid var(--doc-border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 6px solid var(--doc-primary);
+        }
+        .section-card {
+            background-color: var(--doc-card-bg);
+            border: 1px solid var(--doc-border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
+        h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 1rem; border-bottom: 2px solid var(--doc-border); padding-bottom: 0.5rem; }
+        h3 { font-size: 1.1rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+        p { margin-bottom: 1rem; color: var(--doc-muted); }
+        ul { margin-left: 1.5rem; margin-bottom: 1rem; color: var(--doc-muted); }
+        li { margin-bottom: 0.5rem; }
+        code { font-family: ui-monospace, monospace; background: var(--doc-code-bg); padding: 2px 6px; border-radius: 4px; }
+        pre { background: var(--doc-code-bg); padding: 1rem; border-radius: 8px; overflow-x: auto; font-family: ui-monospace, monospace; font-size: 0.85rem; margin-bottom: 1rem; }
+        .back-link { display: inline-block; margin-bottom: 1rem; color: var(--doc-primary); text-decoration: none; font-weight: 600; }
+        .back-link:hover { text-decoration: underline; }
+        .table-doc { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .table-doc th, .table-doc td { border: 1px solid var(--doc-border); padding: 0.75rem 1rem; text-align: left; }
+        .table-doc th { background-color: var(--doc-code-bg); font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="project_documentation.html" class="back-link">&larr; Back to Project Documentation</a>
+        <header class="doc-header">
+            <h1>File Documentation: <code>admin_dashboard.js</code></h1>
+            <p>Admin Dashboard UI Controller &amp; State Management Specification</p>
+        </header>
+
+        <!-- First -->
+        <section class="section-card">
+            <h2>First: Necessity, Role, and Project Interaction</h2>
+            <p>
+                <strong>Why this file is necessary:</strong> <code>admin_dashboard.js</code> is the master controller for the CloudVPN+ administration UI. It coordinates real-time telemetry updates, manages tab navigation state, renders paginated user data, controls interactive modals for server and account operations, and displays feedback toasts.
+            </p>
+            <p>
+                <strong>How it fits into the project:</strong> It connects the DOM view elements defined in <code>admin_dashboard.html</code> with the data methods provided by <code>admin_api.js</code> and the authentication state in <code>admin_auth.js</code>.
+            </p>
+            <p>
+                <strong>How it interacts with the project:</strong>
+                <ul>
+                    <li>Imports <code>AdminAuth</code> from <code>js/admin_auth.js</code> to enforce route security (<code>requireAuth()</code>).</li>
+                    <li>Imports <code>CloudVPNApi</code> from <code>js/admin_api.js</code> to perform authenticated network calls.</li>
+                    <li>Exposes the global controller object <code>window.CloudVPNDashboard</code> for inline HTML button triggers.</li>
+                </ul>
+            </p>
+        </section>
+
+        <!-- Second -->
+        <section class="section-card">
+            <h2>Second: Overall Project Structure &amp; Architectural Context</h2>
+            <p>
+                <code>admin_dashboard.js</code> follows an event-driven Model-View-Controller architecture:
+            </p>
+            <pre>
+                                     +-------------------------------+
+                                     | admin_dashboard.html (View)   |
+                                     +-------------------------------+
+                                           |                    ^
+                            User Actions   |                    | DOM Updates / Modals
+                            (Clicks, Tabs) |                    |
+                                           v                    |
+                                     +-------------------------------+
+                                     | admin_dashboard.js (Ctrl)     |
+                                     +-------------------------------+
+                                           |                    ^
+                              API Requests |                    | JSON Responses
+                                           v                    |
+                                     +-------------------------------+
+                                     | CloudVPNApi (admin_api.js)    |
+                                     +-------------------------------+
+            </pre>
+        </section>
+
+        <!-- Third -->
+        <section class="section-card">
+            <h2>Third: Detailed Breakdown of Functions, Classes, and Members</h2>
+
+            <h3>1. State &amp; Cache Variables</h3>
+            <ul>
+                <li><code>currentSession</code> (<code>object | null</code>): Active session object <code>{ email, password, loggedInAt }</code>.</li>
+                <li><code>currentTab</code> (<code>string</code>): Active tab identifier (<code>'overview' | 'users' | 'servers' | 'diagnostics'</code>).</li>
+                <li><code>userPageStart</code> (<code>number</code>): Offset pointer for user range pagination (default <code>0</code>).</li>
+                <li><code>userPageSize</code> (<code>number</code>): Number of users fetched per page slice (default <code>20</code>).</li>
+                <li><code>cachedServers</code> (<code>Array&lt;string&gt;</code>): In-memory list of registered server names.</li>
+                <li><code>cachedUsers</code> (<code>object</code>): In-memory dictionary of user profiles.</li>
+            </ul>
+
+            <h3>2. Core Controller Functions</h3>
+
+            <h4><code>initDashboard()</code></h4>
+            <ul>
+                <li><strong>Purpose:</strong> Primary lifecycle initialization function invoked when DOM is ready. Verifies auth session, populates navbar badges, registers event listeners, and triggers initial data queries.</li>
+                <li><strong>Dependencies:</strong> <code>imported AdminAuth from js/admin_auth.js</code> (Calls <code>requireAuth()</code>).</li>
+            </ul>
+
+            <h4><code>formatBytes(bytes)</code></h4>
+            <ul>
+                <li><strong>Purpose:</strong> Utility function converting raw byte integers into human-readable data strings (KB, MB, GB).</li>
+                <li><strong>Data Types:</strong> <code>bytes</code> (<code>number | string</code>). Returns <code>string</code> (e.g. <code>"12.45 MB"</code>).</li>
+            </ul>
+
+            <h4><code>showToast(type, message)</code></h4>
+            <ul>
+                <li><strong>Purpose:</strong> Spawns a non-blocking, glassmorphic toast notification in <code>#toastContainer</code> with automatic 4-second timeout and fade-out animation.</li>
+                <li><strong>Data Types:</strong> <code>type</code> (<code>'success' | 'danger' | 'warning'</code>), <code>message</code> (<code>string</code>). Returns <code>void</code>.</li>
+            </ul>
+
+            <h4><code>escapeHtml(str)</code></h4>
+            <ul>
+                <li><strong>Purpose:</strong> Sanitizes dynamic text strings to prevent Cross-Site Scripting (XSS) when injecting server responses into innerHTML.</li>
+                <li><strong>Data Types:</strong> <code>str</code> (<code>string</code>). Returns <code>string</code>.</li>
+            </ul>
+
+            <h4><code>setupTabNavigation()</code> &amp; <code>switchTab(tabName)</code></h4>
+            <ul>
+                <li><strong>Purpose:</strong> Manages sidebar tab button active classes and toggles visibility of tab pane sections (<code>#tab-overview</code>, <code>#tab-users</code>, <code>#tab-servers</code>, <code>#tab-diagnostics</code>).</li>
+                <li><strong>Data Types:</strong> <code>tabName</code> (<code>string</code>). Returns <code>void</code>.</li>
+            </ul>
+
+            <h4><code>refreshAllData()</code></h4>
+            <ul>
+                <li><strong>Purpose:</strong> Executes concurrent updates for server list and overview statistics via <code>Promise.all</code>.</li>
+                <li><strong>Data Types:</strong> Returns <code>Promise&lt;void&gt;</code>.</li>
+            </ul>
+
+            <h4><code>loadServersView()</code></h4>
+            <ul>
+                <li><strong>Purpose:</strong> Fetches routing servers from <code>/adminPanel/serverquery/</code> via <code>CloudVPNApi.fetchServers()</code> and populates both the overview fleet grid and the full server registry table.</li>
+                <li><strong>Dependencies:</strong> <code>imported CloudVPNApi from js/admin_api.js</code>.</li>
+            </ul>
+
+            <h4><code>loadOverviewStats()</code></h4>
+            <ul>
+                <li><strong>Purpose:</strong> Queries user accounts from <code>/adminPanel/listusers/</code> to calculate total users, active accounts, blocked accounts, and total bandwidth consumed.</li>
+                <li><strong>Dependencies:</strong> <code>imported CloudVPNApi from js/admin_api.js</code>.</li>
+            </ul>
+
+            <h4><code>loadUsersTable()</code></h4>
+            <ul>
+                <li><strong>Purpose:</strong> Requests a paginated range of users from <code>/adminPanel/listusers/</code> based on <code>userPageStart</code> and renders the table rows with quota, remaining bandwidth, status badges, and action buttons.</li>
+                <li><strong>Dependencies:</strong> <code>imported CloudVPNApi from js/admin_api.js</code>.</li>
+            </ul>
+
+            <h3>3. Action Modal Handlers</h3>
+
+            <h4><code>inspectUser(userEmail)</code></h4>
+            <ul>
+                <li><strong>Purpose:</strong> Queries single user details from <code>/adminPanel/query/{email}/{passwd}/{userEmail}</code> and renders profile cards and raw JSON in <code>#modalInspectUser</code>.</li>
+            </ul>
+
+            <h4><code>promptRemoveServer(serverName)</code></h4>
+            <ul>
+                <li><strong>Purpose:</strong> Configures <code>#modalConfirm</code> to delete the selected server node via <code>CloudVPNApi.removeServer()</code> upon administrator confirmation.</li>
+            </ul>
+
+            <h4><code>toggleBlockUser(userEmail, block)</code></h4>
+            <ul>
+                <li><strong>Purpose:</strong> Dispatches account block (<code>/adminPanel/blockUser/</code>) or unblock (<code>/adminPanel/unblockUser/</code>) requests and refreshes the user directory.</li>
+            </ul>
+
+            <h4><code>promptChangeEmail(userEmail)</code></h4>
+            <ul>
+                <li><strong>Purpose:</strong> Opens <code>#modalChangeEmail</code> and executes <code>/adminPanel/changeUserEmail/</code> to migrate user data to a new email address.</li>
+            </ul>
+
+            <h4><code>promptDeleteUser(userEmail)</code></h4>
+            <ul>
+                <li><strong>Purpose:</strong> Configures <code>#modalConfirm</code> to delete the selected user via <code>CloudVPNApi.deleteUser()</code>.</li>
+            </ul>
+        </section>
+    </div>
+</body>
+</html>

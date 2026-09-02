@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudVPN+ Admin Control Center</title>
+    <link rel="stylesheet" href="css/admin_style.css">
+    <script src="js/admin_auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const session = AdminAuth.getSession();
+            if (session && session.email) {
+                window.location.replace('admin_dashboard.html');
+            } else {
+                window.location.replace('admin_login.html');
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="wallpaper-veil"></div>
+    <div class="login-container">
+        <div class="glass-panel login-card" style="text-align: center;">
+            <div class="brand-icon-box" style="margin: 0 auto 1rem auto;">
+                <svg class="svg-icon svg-icon-lg" viewBox="0 0 24 24">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+            </div>
+            <h2>CloudVPN<span>+</span></h2>
+            <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">
+                Routing to Control Center...
+            </p>
+        </div>
+    </div>
+</body>
+</html>

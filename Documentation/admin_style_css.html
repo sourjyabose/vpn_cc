@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - admin_style.css</title>
+    <style>
+        :root {
+            --doc-bg: #f8fafc;
+            --doc-card-bg: #ffffff;
+            --doc-text: #0f172a;
+            --doc-muted: #475569;
+            --doc-light: #64748b;
+            --doc-border: #e2e8f0;
+            --doc-primary: #059669;
+            --doc-code-bg: #f1f5f9;
+            --doc-font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--doc-font);
+            background-color: var(--doc-bg);
+            color: var(--doc-text);
+            line-height: 1.6;
+            padding: 2.5rem 1.5rem;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .doc-header {
+            background-color: var(--doc-card-bg);
+            border: 1px solid var(--doc-border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 6px solid var(--doc-primary);
+        }
+        .section-card {
+            background-color: var(--doc-card-bg);
+            border: 1px solid var(--doc-border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
+        h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 1rem; border-bottom: 2px solid var(--doc-border); padding-bottom: 0.5rem; }
+        h3 { font-size: 1.1rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+        p { margin-bottom: 1rem; color: var(--doc-muted); }
+        ul { margin-left: 1.5rem; margin-bottom: 1rem; color: var(--doc-muted); }
+        li { margin-bottom: 0.5rem; }
+        code { font-family: ui-monospace, monospace; background: var(--doc-code-bg); padding: 2px 6px; border-radius: 4px; }
+        pre { background: var(--doc-code-bg); padding: 1rem; border-radius: 8px; overflow-x: auto; font-family: ui-monospace, monospace; font-size: 0.85rem; margin-bottom: 1rem; }
+        .back-link { display: inline-block; margin-bottom: 1rem; color: var(--doc-primary); text-decoration: none; font-weight: 600; }
+        .back-link:hover { text-decoration: underline; }
+        .table-doc { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .table-doc th, .table-doc td { border: 1px solid var(--doc-border); padding: 0.75rem 1rem; text-align: left; }
+        .table-doc th { background-color: var(--doc-code-bg); font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="project_documentation.html" class="back-link">&larr; Back to Project Documentation</a>
+        <header class="doc-header">
+            <h1>File Documentation: <code>admin_style.css</code></h1>
+            <p>Glassmorphism Light-Theme Stylesheet &amp; UI Design Specification</p>
+        </header>
+
+        <!-- First -->
+        <section class="section-card">
+            <h2>First: Necessity, Role, and Project Interaction</h2>
+            <p>
+                <strong>Why this file is necessary:</strong> <code>admin_style.css</code> provides the complete visual styling, glassmorphism rendering, typography, responsive layout rules, form styling, table layouts, and modal transitions for the entire CloudVPN+ Admin Portal.
+            </p>
+            <p>
+                <strong>How it fits into the project:</strong> It unifies the look and feel across <code>index.html</code>, <code>admin_login.html</code>, and <code>admin_dashboard.html</code>. It ensures all components render as distinct, luminous frosted glass panels atop the lush background image (<code>assets/images/bg.jpg</code>) with optimum legibility.
+            </p>
+            <p>
+                <strong>Strict Constraints Compliance:</strong>
+                <ul>
+                    <li><strong>Light Theme:</strong> High-luminosity surfaces with crisp dark slate text.</li>
+                    <li><strong>Zero Gradients:</strong> Strictly avoids any <code>linear-gradient</code>, <code>radial-gradient</code>, or <code>conic-gradient</code> functions. All backgrounds and accents use solid colors or solid-translucent rgba values.</li>
+                    <li><strong>Strictly No Purple, Blue, or Pink:</strong> Excludes all purple, indigo, lavender, violet, blue, cyan, navy, pink, magenta, and rose tones. Utilizes an emerald green, dark slate, amber, crimson, and translucent white color palette.</li>
+                    <li><strong>Zero Emojis:</strong> Visual cues are rendered solely using scalable vector SVG stroke icons.</li>
+                </ul>
+            </p>
+        </section>
+
+        <!-- Second -->
+        <section class="section-card">
+            <h2>Second: Overall Project Structure &amp; Architectural Design</h2>
+            <p>
+                The stylesheet is organized into functional CSS modules using CSS Custom Properties (Variables):
+            </p>
+            <pre>
+CSS Architecture Layers:
+1. CSS Custom Properties (:root) -> Centralized theme tokens, colors, radiuses, shadows
+2. Base & Reset Rules (*, body, html) -> Fixed wallpaper background and brightening veil
+3. Glassmorphic Surface Utilities (.glass-panel, .glass-panel-subtle, .glass-panel-hover)
+4. Vector Iconography Base (.svg-icon, .svg-icon-lg)
+5. Layout Containers (.login-container, .dashboard-app, .dashboard-main)
+6. Component Blocks (Navbar, Sidebar, Stat Cards, Form Inputs, Buttons, Tables, Badges, Modals, Toasts)
+7. Responsive Media Queries (@media max-width: 1024px, @media max-width: 768px)
+            </pre>
+        </section>
+
+        <!-- Third -->
+        <section class="section-card">
+            <h2>Third: Detailed Breakdown of Variables, Selectors &amp; Rules</h2>
+
+            <h3>1. CSS Custom Properties (Variables in <code>:root</code>)</h3>
+            <table class="table-doc">
+                <thead>
+                    <tr>
+                        <th>Variable Name</th>
+                        <th>Value</th>
+                        <th>Purpose &amp; Rationale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>--color-bg-overlay</code></td>
+                        <td><code>rgba(240, 245, 241, 0.35)</code></td>
+                        <td>Translucent veil tinting the dark areas of the wallpaper to maximize text contrast.</td>
+                    </tr>
+                    <tr>
+                        <td><code>--glass-bg</code></td>
+                        <td><code>rgba(255, 255, 255, 0.86)</code></td>
+                        <td>Primary frosted glass surface opacity for main panels, tables, and cards.</td>
+                    </tr>
+                    <tr>
+                        <td><code>--glass-bg-subtle</code></td>
+                        <td><code>rgba(255, 255, 255, 0.72)</code></td>
+                        <td>Subtle translucent fill for nested sub-cards and stat boxes.</td>
+                    </tr>
+                    <tr>
+                        <td><code>--glass-bg-solid</code></td>
+                        <td><code>rgba(255, 255, 255, 0.96)</code></td>
+                        <td>High-opacity glass surface for critical modal dialogs.</td>
+                    </tr>
+                    <tr>
+                        <td><code>--primary-green</code></td>
+                        <td><code>#059669</code></td>
+                        <td>Primary brand accent color (solid emerald green).</td>
+                    </tr>
+                    <tr>
+                        <td><code>--primary-green-hover</code></td>
+                        <td><code>#047857</code></td>
+                        <td>Darker solid emerald green for button hover states.</td>
+                    </tr>
+                    <tr>
+                        <td><code>--danger-red</code></td>
+                        <td><code>#dc2626</code></td>
+                        <td>Solid crimson for destructive actions (block, delete, remove).</td>
+                    </tr>
+                    <tr>
+                        <td><code>--warning-amber</code></td>
+                        <td><code>#d97706</code></td>
+                        <td>Solid amber for warnings and caution states.</td>
+                    </tr>
+                    <tr>
+                        <td><code>--text-main</code></td>
+                        <td><code>#0f172a</code></td>
+                        <td>Deep slate text color providing AAA readability on frosted glass.</td>
+                    </tr>
+                    <tr>
+                        <td><code>--blur-strength</code></td>
+                        <td><code>16px</code></td>
+                        <td>Standard backdrop-filter blur radius for glass panels.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>2. Key CSS Classes</h3>
+            <ul>
+                <li>
+                    <code>.glass-panel</code>: Core glassmorphism utility class.
+                    <pre>
+background-color: var(--glass-bg);
+backdrop-filter: blur(var(--blur-strength));
+-webkit-backdrop-filter: blur(var(--blur-strength));
+border: 1px solid var(--glass-border);
+box-shadow: var(--glass-shadow);
+border-radius: var(--radius-lg);
+                    </pre>
+                </li>
+                <li>
+                    <code>.wallpaper-veil</code>: Fixed overlay position with <code>pointer-events: none</code> that brightens background image highlights without interfering with UI clicks.
+                </li>
+                <li>
+                    <code>.svg-icon</code>: Standardized <code>1.25rem</code> inline vector icon wrapper with <code>stroke: currentColor</code> and <code>fill: none</code>.
+                </li>
+                <li>
+                    <code>.btn-primary</code>, <code>.btn-secondary</code>, <code>.btn-danger</code>, <code>.btn-warning</code>: Solid-color button components with smooth micro-interactions.
+                </li>
+                <li>
+                    <code>.glass-table</code>: High-contrast data table with separated cell spacing, frosted header styling, and row hover transitions.
+                </li>
+                <li>
+                    <code>.modal-backdrop</code> &amp; <code>.modal-card</code>: Accessible fixed-position overlay with flexbox centering and glassmorphic dialog card.
+                </li>
+                <li>
+                    <code>.toast</code> &amp; <code>@keyframes toastSlideIn</code>: Dynamic floating status feedback cards with slide-in animation.
+                </li>
+            </ul>
+
+            <h3>3. External Dependencies &amp; Assets</h3>
+            <ul>
+                <li><code>imported assets/images/bg.jpg</code> (Referenced in <code>body { background-image: url('../assets/images/bg.jpg'); }</code> as the fixed background wallpaper).</li>
+            </ul>
+        </section>
+    </div>
+</body>
+</html>
