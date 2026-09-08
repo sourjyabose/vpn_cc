@@ -203,7 +203,7 @@ async def adminenquiry(email,passwd,userEmail):
     if verifynonce(email,"password",passwd,role="admins"):
         try:
             data=copy.deepcopy(db["users"][userEmail])
-            del db["users"][userEmail]["password"]
+            del data["password"]
             return {"status":"success",
                     "data":data}
         except Exception as e:
