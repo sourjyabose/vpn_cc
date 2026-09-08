@@ -1,345 +1,323 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CloudVPN+ Admin Portal - REST API Documentation</title>
-    <style>
-        :root {
-            --doc-bg: #f8fafc;
-            --doc-card-bg: #ffffff;
-            --doc-text: #0f172a;
-            --doc-muted: #475569;
-            --doc-light: #64748b;
-            --doc-border: #e2e8f0;
-            --doc-primary: #059669;
-            --doc-primary-light: #ecfdf5;
-            --doc-code-bg: #f1f5f9;
-            --doc-font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            --method-get: #059669;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: var(--doc-font);
-            background-color: var(--doc-bg);
-            color: var(--doc-text);
-            line-height: 1.6;
-            padding: 2.5rem 1.5rem;
-        }
-        .container { max-width: 1100px; margin: 0 auto; }
-        .doc-header {
-            background-color: var(--doc-card-bg);
-            border: 1px solid var(--doc-border);
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border-left: 6px solid var(--doc-primary);
-        }
-        .doc-title { font-size: 2rem; font-weight: 800; color: var(--doc-text); margin-bottom: 0.5rem; }
-        .doc-title span { color: var(--doc-primary); }
-        .doc-subtitle { font-size: 1.05rem; color: var(--doc-muted); }
-        .section-card {
-            background-color: var(--doc-card-bg);
-            border: 1px solid var(--doc-border);
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-        h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
-        h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 1.25rem; border-bottom: 2px solid var(--doc-border); padding-bottom: 0.5rem; }
-        h3 { font-size: 1.15rem; font-weight: 700; margin-top: 1rem; margin-bottom: 0.5rem; }
-        p { margin-bottom: 1rem; color: var(--doc-muted); }
-        ul { margin-left: 1.5rem; margin-bottom: 1rem; color: var(--doc-muted); }
-        li { margin-bottom: 0.5rem; }
-        code { font-family: ui-monospace, monospace; background: var(--doc-code-bg); padding: 2px 6px; border-radius: 4px; font-size: 0.875rem; }
-        pre { background: var(--doc-code-bg); padding: 1rem; border-radius: 8px; overflow-x: auto; font-family: ui-monospace, monospace; font-size: 0.85rem; margin-bottom: 1rem; }
-        .api-badge-get {
-            display: inline-block;
-            background-color: var(--doc-primary);
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 0.8rem;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            margin-right: 0.5rem;
-        }
-        .api-card {
-            background-color: var(--doc-card-bg);
-            border: 1px solid var(--doc-border);
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-        .api-card:hover {
-            border-color: #cbd5e1;
-        }
-        .api-header {
-            display: flex;
-            align-items: center;
-            font-size: 1.1rem;
-            font-weight: 700;
-            font-family: ui-monospace, monospace;
-            margin-bottom: 0.75rem;
-            color: var(--doc-text);
-        }
-        .caller-box {
-            background-color: var(--doc-primary-light);
-            border: 1px solid #a7f3d0;
-            border-radius: 6px;
-            padding: 0.75rem 1rem;
-            margin-top: 0.75rem;
-            font-size: 0.875rem;
-            color: #065f46;
-        }
-        .caller-box strong { color: #047857; }
-        .back-link { display: inline-block; margin-bottom: 1rem; color: var(--doc-primary); text-decoration: none; font-weight: 600; }
-        .back-link:hover { text-decoration: underline; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudVPN+ | REST API Documentation</title>
+  <style>
+    :root {
+      --doc-bg: #faf8f5;
+      --doc-surface: #ffffff;
+      --doc-border: #e7e5e4;
+      --doc-text: #1c1917;
+      --doc-text-muted: #57534e;
+      --doc-brand: #b45309;
+      --doc-brand-dark: #78350f;
+      --doc-brand-light: #fef3c7;
+      --doc-code-bg: #292524;
+      --doc-code-text: #f5f5f4;
+      --method-post: #b45309;
+      --method-get: #166534;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--doc-bg);
+      color: var(--doc-text);
+      line-height: 1.65;
+      padding: 2.5rem 1.5rem;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background-color: var(--doc-surface);
+      border: 1px solid var(--doc-border);
+      border-radius: 16px;
+      padding: 3rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    header {
+      border-bottom: 2px solid var(--doc-border);
+      padding-bottom: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .badge {
+      display: inline-block;
+      background-color: var(--doc-brand-light);
+      color: var(--doc-brand-dark);
+      border: 1px solid var(--doc-brand);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    h1 { font-size: 2.4rem; color: var(--doc-text); margin-bottom: 0.5rem; }
+    h2 { font-size: 1.6rem; color: var(--doc-brand-dark); margin: 2.5rem 0 1rem 0; border-bottom: 1px solid var(--doc-border); padding-bottom: 0.4rem; }
+    h3 { font-size: 1.25rem; color: var(--doc-text); margin: 1.5rem 0 0.75rem 0; }
+    p, li { font-size: 1rem; color: var(--doc-text-muted); margin-bottom: 1rem; }
+    ul, ol { padding-left: 1.75rem; margin-bottom: 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+    strong { color: var(--doc-text); }
+    .method-tag {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-right: 0.5rem;
+    }
+    .method-post { background-color: var(--method-post); }
+    .method-get { background-color: var(--method-get); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border: 1px solid var(--doc-border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+    th {
+      background-color: var(--doc-brand-light);
+      color: var(--doc-brand-dark);
+      font-weight: 700;
+    }
+    tr:nth-child(even) { background-color: #fdfbf7; }
+    pre {
+      background-color: var(--doc-code-bg);
+      color: var(--doc-code-text);
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.9rem;
+      margin: 1.25rem 0;
+    }
+    code {
+      font-family: Consolas, Monaco, monospace;
+      background-color: #f5f2eb;
+      color: var(--doc-brand-dark);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .endpoint-card {
+      border: 1px solid var(--doc-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      background-color: #ffffff;
+    }
+    .endpoint-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--doc-text);
+    }
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: var(--doc-brand);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .back-btn:hover { text-decoration: underline; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <a href="project_documentation.html" class="back-link">&larr; Back to Project Documentation</a>
-        <header class="doc-header">
-            <div class="doc-title">CloudVPN<span>+</span> REST API Specification</div>
-            <div class="doc-subtitle">Exhaustive Endpoints Catalog, Nonce Protocols &amp; Client Usage Mapping</div>
-        </header>
+  <div class="container">
+    <a href="project_documentation.html" class="back-btn">← Back to Master Documentation</a>
 
-        <section class="section-card">
-            <h2>Authentication Protocol Summary</h2>
-            <p>
-                All <code>/adminPanel/</code> routes in <code>ccserver.py</code> require a computed <code>passwd</code> token. The token is calculated dynamically for each request as:
-            </p>
-            <pre>
-1. Nonce Request: POST /admin/nonce with JSON payload {"UEmail": email} -> Returns {"nonce": integer}
-2. Hash Computation: sha256(actualPassword + String(nonce)) -> 64-char hexadecimal digest
-3. Endpoint Call: GET /adminPanel/route/{email}/{digest}/...
-            </pre>
-        </section>
+    <header>
+      <span class="badge">API Specification & Contract</span>
+      <h1>CloudVPN+ — Master REST API Documentation</h1>
+      <p>Exhaustive specifications for all HTTP REST API endpoints consumed by the frontend application, mapping each endpoint directly to its calling files, classes, and controller functions.</p>
+    </header>
 
-        <!-- API Endpoint List -->
-        <section class="section-card">
-            <h2>Administrative Endpoints Catalog</h2>
+    <section>
+      <h2>API Overview & Integration Matrix</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>HTTP Endpoint</th>
+            <th>Calling File(s)</th>
+            <th>Calling Class</th>
+            <th>Calling Function(s)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>POST /api/v1/auth/signup</code></td>
+            <td><code>js/api_client.js</code>,<br><code>js/auth.js</code></td>
+            <td><code>CloudVPNAPIClient</code></td>
+            <td><code>CloudVPNAPIClient.signup()</code>,<br><code>signupForm submit listener</code></td>
+          </tr>
+          <tr>
+            <td><code>POST /api/v1/auth/login</code></td>
+            <td><code>js/api_client.js</code>,<br><code>js/auth.js</code></td>
+            <td><code>CloudVPNAPIClient</code></td>
+            <td><code>CloudVPNAPIClient.login()</code>,<br><code>loginForm submit listener</code>,<br><code>window.login_succ()</code></td>
+          </tr>
+          <tr>
+            <td><code>POST /api/v1/recharge/process</code></td>
+            <td><code>js/api_client.js</code>,<br><code>js/recharge.js</code></td>
+            <td><code>CloudVPNAPIClient</code></td>
+            <td><code>CloudVPNAPIClient.processRecharge()</code>,<br><code>rechargeForm submit listener</code></td>
+          </tr>
+          <tr>
+            <td><code>GET /api/v1/user/session</code></td>
+            <td><code>js/api_client.js</code></td>
+            <td><code>CloudVPNAPIClient</code></td>
+            <td><code>CloudVPNAPIClient.getCurrentUser()</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
 
-            <!-- 1. POST /admin/nonce -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-badge-get" style="background-color: #059669;">POST</span> /admin/nonce
-                </div>
-                <p><strong>Description:</strong> Increments and returns the current nonce for the specified administrator email.</p>
-                <p><strong>Request Body:</strong> <code>{"UEmail": "root" | "admin@example.com"}</code> (Transmitted as JSON payload).</p>
-                <p><strong>Success Response (200 OK):</strong></p>
-                <pre>{"nonce": 14}</pre>
-                <div class="caller-box">
-                    <strong>Used by:</strong>
-                    <ul>
-                        <li><strong>File:</strong> <code>js/admin_api.js</code> &bull; <strong>Class/Object:</strong> <code>CloudVPNApi</code> &bull; <strong>Function:</strong> <code>getAdminNonce(email)</code> and <code>encodeNonce(email, actualPassword)</code></li>
-                        <li><strong>File:</strong> <code>js/admin_dashboard.js</code> &bull; <strong>Function:</strong> Live Diagnostics runner</li>
-                    </ul>
-                </div>
-            </div>
+    <!-- ENDPOINT 1 -->
+    <section class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-tag method-post">POST</span>
+        <code>/api/v1/auth/signup</code>
+      </div>
+      <p><strong>Description:</strong> Registers a new user account with CloudVPN+.</p>
 
-            <!-- 2. GET /adminPanel/loginVerification -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-badge-get">GET</span> /adminPanel/loginVerification/{email}/{passwd}/
-                </div>
-                <p><strong>Description:</strong> Validates admin credentials using the computed hashed nonce password.</p>
-                <p><strong>Path Parameters:</strong> <code>email</code> (Admin identity / email), <code>passwd</code> (SHA-256 hashed password + nonce).</p>
-                <p><strong>Success Response (200 OK):</strong></p>
-                <pre>{"status": "success"}</pre>
-                <p><strong>Failure Response:</strong></p>
-                <pre>{"status": "error", "message": "Auth Fail"}</pre>
-                <div class="caller-box">
-                    <strong>Used by:</strong>
-                    <ul>
-                        <li><strong>File:</strong> <code>js/admin_api.js</code> &bull; <strong>Object:</strong> <code>CloudVPNApi</code> &bull; <strong>Function:</strong> <code>verifyLogin(email, password)</code></li>
-                        <li><strong>File:</strong> <code>js/admin_auth.js</code> &bull; <strong>Object:</strong> <code>AdminAuth</code> &bull; <strong>Function:</strong> <code>login(identity, password)</code></li>
-                        <li><strong>File:</strong> <code>admin_login.html</code> &bull; <strong>Function:</strong> Form submit handler</li>
-                    </ul>
-                </div>
-            </div>
+      <h3>Usage Mapping</h3>
+      <ul>
+        <li><strong>Consuming File:</strong> <code>js/api_client.js</code> & <code>js/auth.js</code></li>
+        <li><strong>Consuming Class:</strong> <code>CloudVPNAPIClient</code></li>
+        <li><strong>Consuming Function:</strong> <code>async signup(payload)</code></li>
+      </ul>
 
-            <!-- 3. GET /adminPanel/serverquery -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-badge-get">GET</span> /adminPanel/serverquery/{email}/{passwd}/
-                </div>
-                <p><strong>Description:</strong> Retrieves the list of all registered routing server names in the CloudVPN+ fleet.</p>
-                <p><strong>Success Response (200 OK):</strong></p>
-                <pre>{"status": "success", "serverlist": ["us-east-01", "eu-central-01", "ap-southeast-01"]}</pre>
-                <div class="caller-box">
-                    <strong>Used by:</strong>
-                    <ul>
-                        <li><strong>File:</strong> <code>js/admin_api.js</code> &bull; <strong>Object:</strong> <code>CloudVPNApi</code> &bull; <strong>Function:</strong> <code>fetchServers(email, password)</code></li>
-                        <li><strong>File:</strong> <code>js/admin_dashboard.js</code> &bull; <strong>Functions:</strong> <code>loadServersView()</code>, <code>refreshAllData()</code>, Diagnostics Console</li>
-                    </ul>
-                </div>
-            </div>
+      <h3>Request Headers</h3>
+      <pre>Content-Type: application/json
+Accept: application/json</pre>
 
-            <!-- 4. GET /adminPanel/registerServer -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-badge-get">GET</span> /adminPanel/registerServer/{email}/{passwd}/{servername}/{serverkey}
-                </div>
-                <p><strong>Description:</strong> Registers a new server node with its private secret authentication key in the backend registry.</p>
-                <p><strong>Path Parameters:</strong> <code>servername</code> (Server identifier), <code>serverkey</code> (Node secret key).</p>
-                <p><strong>Success Response (200 OK):</strong></p>
-                <pre>{"status": "success"}</pre>
-                <p><strong>Error Response (Server Already Exists):</strong></p>
-                <pre>{"status": "error", "message": "Server Already Exist"}</pre>
-                <div class="caller-box">
-                    <strong>Used by:</strong>
-                    <ul>
-                        <li><strong>File:</strong> <code>js/admin_api.js</code> &bull; <strong>Object:</strong> <code>CloudVPNApi</code> &bull; <strong>Function:</strong> <code>registerServer(email, password, serverName, serverKey)</code></li>
-                        <li><strong>File:</strong> <code>js/admin_dashboard.js</code> &bull; <strong>Function:</strong> <code>#formRegisterServer.onsubmit</code></li>
-                    </ul>
-                </div>
-            </div>
+      <h3>Request Payload Schema (JSON)</h3>
+      <pre>{
+  "email": "user@example.com",        // string, required (valid email format)
+  "password": "StrongPassword123"      // string, required (min 8 chars, alphanumeric)
+}</pre>
 
-            <!-- 5. GET /adminPanel/removeServer -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-badge-get">GET</span> /adminPanel/removeServer/{email}/{passwd}/{servername}
-                </div>
-                <p><strong>Description:</strong> Removes a server from the database registry and purges its IP/port mappings.</p>
-                <p><strong>Success Response (200 OK):</strong></p>
-                <pre>{"status": "success"}</pre>
-                <div class="caller-box">
-                    <strong>Used by:</strong>
-                    <ul>
-                        <li><strong>File:</strong> <code>js/admin_api.js</code> &bull; <strong>Object:</strong> <code>CloudVPNApi</code> &bull; <strong>Function:</strong> <code>removeServer(email, password, serverName)</code></li>
-                        <li><strong>File:</strong> <code>js/admin_dashboard.js</code> &bull; <strong>Function:</strong> <code>promptRemoveServer(serverName)</code></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- 6. GET /adminPanel/listusers -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-badge-get">GET</span> /adminPanel/listusers/{email}/{passwd}/{startingRange}/{endingRange}
-                </div>
-                <p><strong>Description:</strong> Returns a paginated slice of user accounts containing quota, device IDs, bandwidth usage, and block status (with password field stripped).</p>
-                <p><strong>Success Response (200 OK):</strong></p>
-                <pre>
-{
+      <h3>Success Response (201 Created / 200 OK)</h3>
+      <pre>{
   "status": "success",
-  "data": {
-    "user@example.com": {
-      "recharge": 10.0,
-      "device_id": "default",
-      "nonce": 2,
-      "blocked": 0,
-      "bytesusedsofar": 1245000000
-    }
+  "message": "Account created successfully",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": "usr_98124",
+    "email": "user@example.com",
+    "createdAt": "2026-08-26T17:15:00Z"
   }
-}
-                </pre>
-                <div class="caller-box">
-                    <strong>Used by:</strong>
-                    <ul>
-                        <li><strong>File:</strong> <code>js/admin_api.js</code> &bull; <strong>Object:</strong> <code>CloudVPNApi</code> &bull; <strong>Function:</strong> <code>listUsers(email, password, startingRange, endingRange)</code></li>
-                        <li><strong>File:</strong> <code>js/admin_dashboard.js</code> &bull; <strong>Functions:</strong> <code>loadUsersTable()</code>, <code>loadOverviewStats()</code></li>
-                    </ul>
-                </div>
-            </div>
+}</pre>
 
-            <!-- 7. GET /adminPanel/query -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-badge-get">GET</span> /adminPanel/query/{email}/{passwd}/{userEmail}
-                </div>
-                <p><strong>Description:</strong> Queries complete profile and usage metrics for a specific single user account.</p>
-                <p><strong>Success Response (200 OK):</strong></p>
-                <pre>
-{
+      <h3>Error Response (400 Bad Request / 409 Conflict)</h3>
+      <pre>{
+  "status": "error",
+  "message": "An account with this email address already exists."
+}</pre>
+
+      <h3>cURL Example</h3>
+      <pre>curl -X POST http://localhost:8080/api/v1/auth/signup \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@cloudvpn.plus","password":"SecretPassword1"}'</pre>
+    </section>
+
+    <!-- ENDPOINT 2 -->
+    <section class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-tag method-post">POST</span>
+        <code>/api/v1/auth/login</code>
+      </div>
+      <p><strong>Description:</strong> Authenticates existing user credentials and returns a session token. Upon receipt, triggers <code>window.login_succ()</code>.</p>
+
+      <h3>Usage Mapping</h3>
+      <ul>
+        <li><strong>Consuming File:</strong> <code>js/api_client.js</code> & <code>js/auth.js</code></li>
+        <li><strong>Consuming Class:</strong> <code>CloudVPNAPIClient</code></li>
+        <li><strong>Consuming Function:</strong> <code>async login(payload)</code>, invokes <code>window.login_succ(response)</code></li>
+      </ul>
+
+      <h3>Request Payload Schema (JSON)</h3>
+      <pre>{
+  "email": "user@example.com",        // string, required
+  "password": "UserPassword123"       // string, required
+}</pre>
+
+      <h3>Success Response (200 OK)</h3>
+      <pre>{
   "status": "success",
-  "data": {
-    "recharge": 5.0,
-    "device_id": "uuid-9842-1249",
-    "nonce": 4,
-    "blocked": 0,
-    "bytesusedsofar": 512000000
+  "message": "Authentication successful",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": "usr_789456",
+    "email": "user@example.com",
+    "lastLogin": "2026-08-26T17:15:00Z"
   }
-}
-                </pre>
-                <div class="caller-box">
-                    <strong>Used by:</strong>
-                    <ul>
-                        <li><strong>File:</strong> <code>js/admin_api.js</code> &bull; <strong>Object:</strong> <code>CloudVPNApi</code> &bull; <strong>Function:</strong> <code>queryUser(email, password, userEmail)</code></li>
-                        <li><strong>File:</strong> <code>js/admin_dashboard.js</code> &bull; <strong>Functions:</strong> <code>inspectUser(userEmail)</code>, Quick Search form</li>
-                    </ul>
-                </div>
-            </div>
+}</pre>
 
-            <!-- 8. GET /adminPanel/blockUser -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-badge-get">GET</span> /adminPanel/blockUser/{email}/{passwd}/{userEmail}
-                </div>
-                <p><strong>Description:</strong> Blocks a user account from VPN access and broadcasts a block action to connected routing server websockets.</p>
-                <p><strong>Success Response (200 OK):</strong></p>
-                <pre>{"status": "success"}</pre>
-                <div class="caller-box">
-                    <strong>Used by:</strong>
-                    <ul>
-                        <li><strong>File:</strong> <code>js/admin_api.js</code> &bull; <strong>Object:</strong> <code>CloudVPNApi</code> &bull; <strong>Function:</strong> <code>blockUser(email, password, userEmail)</code></li>
-                        <li><strong>File:</strong> <code>js/admin_dashboard.js</code> &bull; <strong>Function:</strong> <code>toggleBlockUser(userEmail, true)</code></li>
-                    </ul>
-                </div>
-            </div>
+      <h3>Error Response (401 Unauthorized)</h3>
+      <pre>{
+  "status": "error",
+  "message": "Invalid email or password."
+}</pre>
 
-            <!-- 9. GET /adminPanel/unblockUser -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-badge-get">GET</span> /adminPanel/unblockUser/{email}/{passwd}/{userEmail}
-                </div>
-                <p><strong>Description:</strong> Unblocks a previously restricted user account.</p>
-                <p><strong>Success Response (200 OK):</strong></p>
-                <pre>{"status": "success"}</pre>
-                <div class="caller-box">
-                    <strong>Used by:</strong>
-                    <ul>
-                        <li><strong>File:</strong> <code>js/admin_api.js</code> &bull; <strong>Object:</strong> <code>CloudVPNApi</code> &bull; <strong>Function:</strong> <code>unblockUser(email, password, userEmail)</code></li>
-                        <li><strong>File:</strong> <code>js/admin_dashboard.js</code> &bull; <strong>Function:</strong> <code>toggleBlockUser(userEmail, false)</code></li>
-                    </ul>
-                </div>
-            </div>
+      <h3>cURL Example</h3>
+      <pre>curl -X POST http://localhost:8080/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@cloudvpn.plus","password":"SecretPassword1"}'</pre>
+    </section>
 
-            <!-- 10. GET /adminPanel/changeUserEmail -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-badge-get">GET</span> /adminPanel/changeUserEmail/{email}/{passwd}/{userEmail}/{newUserEmail}
-                </div>
-                <p><strong>Description:</strong> Migrates user data (quota, bandwidth, device ID, nonce) from <code>userEmail</code> to <code>newUserEmail</code> and removes the old email key.</p>
-                <p><strong>Success Response (200 OK):</strong></p>
-                <pre>{"status": "success"}</pre>
-                <div class="caller-box">
-                    <strong>Used by:</strong>
-                    <ul>
-                        <li><strong>File:</strong> <code>js/admin_api.js</code> &bull; <strong>Object:</strong> <code>CloudVPNApi</code> &bull; <strong>Function:</strong> <code>changeUserEmail(email, password, userEmail, newUserEmail)</code></li>
-                        <li><strong>File:</strong> <code>js/admin_dashboard.js</code> &bull; <strong>Function:</strong> <code>promptChangeEmail(userEmail)</code></li>
-                    </ul>
-                </div>
-            </div>
+    <!-- ENDPOINT 3 -->
+    <section class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-tag method-post">POST</span>
+        <code>/api/v1/recharge/process</code>
+      </div>
+      <p><strong>Description:</strong> Processes a high-speed data quota top-up for the active account.</p>
 
-            <!-- 11. GET /adminPanel/deleteUser -->
-            <div class="api-card">
-                <div class="api-header">
-                    <span class="api-badge-get">GET</span> /adminPanel/deleteUser/{email}/{passwd}/{userEmail}
-                </div>
-                <p><strong>Description:</strong> Permanently deletes a user record from the database.</p>
-                <p><strong>Success Response (200 OK):</strong></p>
-                <pre>{"status": "success"}</pre>
-                <div class="caller-box">
-                    <strong>Used by:</strong>
-                    <ul>
-                        <li><strong>File:</strong> <code>js/admin_api.js</code> &bull; <strong>Object:</strong> <code>CloudVPNApi</code> &bull; <strong>Function:</strong> <code>deleteUser(email, password, userEmail)</code></li>
-                        <li><strong>File:</strong> <code>js/admin_dashboard.js</code> &bull; <strong>Function:</strong> <code>promptDeleteUser(userEmail)</code></li>
-                    </ul>
-                </div>
-            </div>
+      <h3>Usage Mapping</h3>
+      <ul>
+        <li><strong>Consuming File:</strong> <code>js/api_client.js</code> & <code>js/recharge.js</code></li>
+        <li><strong>Consuming Class:</strong> <code>CloudVPNAPIClient</code></li>
+        <li><strong>Consuming Function:</strong> <code>async processRecharge(payload)</code></li>
+      </ul>
 
-        </section>
-    </div>
+      <h3>Request Headers</h3>
+      <pre>Content-Type: application/json
+Accept: application/json
+Authorization: Bearer &lt;auth_token&gt;</pre>
+
+      <h3>Request Payload Schema (JSON)</h3>
+      <pre>{
+  "plan": "1.5gb",                    // string, required (options: '1gb', '1.5gb', '2gb', '5gb', '10gb')
+  "amount": "$2.99",                  // string, required
+  "userEmail": "user@cloudvpn.plus"   // string, required
+}</pre>
+
+      <h3>Success Response (200 OK)</h3>
+      <pre>{
+  "status": "success",
+  "transactionId": "TXN_7849201",
+  "plan": "1.5gb",
+  "amount": "$2.99",
+  "timestamp": "2026-08-26T17:15:00Z",
+  "message": "Recharge completed successfully for plan 1.5gb"
+}</pre>
+
+      <h3>cURL Example</h3>
+      <pre>curl -X POST http://localhost:8080/api/v1/recharge/process \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer mock_jwt_token_123" \
+  -d '{"plan":"2gb","amount":"$3.99","userEmail":"user@cloudvpn.plus"}'</pre>
+    </section>
+  </div>
 </body>
 </html>
