@@ -10,7 +10,7 @@
     let currentSession = null;
     let currentTab = 'overview';
     let userPageStart = 0;
-    const userPageSize = 20;
+    const userPageSize = 5;
 
     // Cache
     let cachedServers = [];
