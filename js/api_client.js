@@ -192,4 +192,4 @@ class CloudVPNAPIClient {
 }
 
 // Global instance creation for cross-file accessibility
-window.CloudVPNAPI = new CloudVPNAPIClient("http://127.0.0.1:8338");
+window.CloudVPNAPI = new CloudVPNAPIClient(window.location.origin);

@@ -7,6 +7,8 @@ import hashlib
 import asyncio
 import copy
 
+currentRequestToken=0
+nextServicableRequestNo=1
 
 sessionStorage={}
 
@@ -26,6 +28,9 @@ except Exception as e:
     pickle.dump(db,open("DB.dsk","wb"))
 
 def verifynonce(email,field,value,role="users"):
+    global nextServicableRequestNo
+    if(role!="users"):
+        nextServicableRequestNo+=1;
     htoken=hashlib.sha256((db[role][email][field]+str(db[role][email]["nonce"])).encode("utf-8")).hexdigest();
     if value==htoken:
         if role=="users":
@@ -259,11 +264,32 @@ async def listusers(email,passwd,startingRange,endingRange):
                 "message":"Auth Fail"}
 
 
+@server.get("/adminops")
+async def fetchadminpage():
+    print("-----")
+    return RedirectResponse(url=f"/adminassets/admin_dashboard.html")
+
 
 @server.post("/admin/nonce")
 async def getadminnonce(request:Request):
+    counter=0
+    global nextServicableRequestNo,currentRequestToken
+    currentRequestToken+=1
+    requestid=currentRequestToken
+
+    if requestid!=nextServicableRequestNo:
+        while True:
+            if requestid==nextServicableRequestNo:
+                break;
+            await asyncio.sleep(1)
+            counter+=1
+            if counter%5==0:
+                if requestid-nextServicableRequestNo==1:
+                    nextServicableRequestNo+=1
+                    print("Release")
     req=await request.json()
-    db["admins"][req["UEmail"]]["nonce"]+=0
+    db["admins"][req["UEmail"]]["nonce"]+=1
+
     return {"nonce":db["admins"][req["UEmail"]]["nonce"]}
 
 
@@ -396,6 +422,7 @@ def login(signup:suuserdata,response:Response):
 }
 
 @server.post("/recharge/process")
+
 async def recharge(request:Request):
     htoken=request.headers.get("Authorization").replace("Bearer ","")
     
