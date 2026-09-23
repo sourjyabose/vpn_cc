@@ -24,13 +24,13 @@ For Windows:
 ipconfig
 ```
 
-the server url then will be in this format: `http://<ip_address>:8338/`
+the ccserver url then will be in this format: `http://<ip_address>:8338/`
 
 
 #### > How to start the system
 1. Start the ccserver
 2. From Admin Dashboard (http://127.0.0.1:8338/adminops)
-   - Navigate to ccserver registry -> Register new server (One time only)
+   - Navigate to server registry -> Register new server (One time only)
    - Enter Sever Name
    - Enter Server Key
 3. Now configure routing server with the same server name and server key and also configure other details.
