@@ -33,6 +33,6 @@ the ccserver url then will be in this format: `http://<ip_address>:8338/`
    - Navigate to server registry -> Register new server (One time only)
    - Enter Sever Name
    - Enter Server Key
-3. Now configure routing server with the same server name and server key and also configure other details.
+3. Now configure routing server with the same server name and server key and also configure other details (refer respective README).
 4. Start the routing server.
-5. Now Client App is ready to run but before that chrome extension must be installed in the clients browser.
+5. Now Client App (configuration required, refer respective README) is ready to run but before that chrome extension must be installed in the clients browser.
