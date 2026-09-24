@@ -7,6 +7,12 @@ This is the command-and-control server for CloudVPN.
 ```ps
 python3 -m pip install -r requirements.txt
 ```
+Install any ASGI server (uvicorn preferred):
+
+```ps
+python3 -m pip install uvicorn
+```
+
 ### Running the server
 
 ```ps
